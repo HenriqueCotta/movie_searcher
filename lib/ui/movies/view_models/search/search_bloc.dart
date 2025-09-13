@@ -1,3 +1,4 @@
+// ui/movies/view_models/search/search_bloc.dart
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/data/repositories/movies_repository.dart';
@@ -7,6 +8,8 @@ import 'search_state.dart';
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final MoviesRepository moviesRepository;
   Timer? _debounce;
+  bool _closing = false;
+
   SearchBloc(this.moviesRepository) : super(const SearchIdle()) {
     on<SearchTextChanged>(_onChanged);
     on<SearchSubmitted>(_onSubmitted);
@@ -14,9 +17,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 
   void _onChanged(SearchTextChanged event, Emitter<SearchState> _) {
+    if (_closing) return;
+
     _debounce?.cancel();
+    final q = event.query;
+
     _debounce = Timer(const Duration(milliseconds: 400), () {
-      add(SearchSubmitted(event.query));
+      if (_closing || isClosed) return;
+      add(SearchSubmitted(q));
     });
   }
 
@@ -41,7 +49,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   @override
   Future<void> close() {
+    _closing = true;
     _debounce?.cancel();
+    _debounce = null;
     return super.close();
   }
 }

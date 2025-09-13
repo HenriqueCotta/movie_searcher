@@ -11,22 +11,27 @@ class RecentCubit extends Cubit<RecentState> {
     emit(const RecentLoading());
     try {
       final rows = await local.getRecents();
-      if (rows.isEmpty) {
-        emit(const RecentEmpty());
-        return;
-      }
-      final items = rows.map((r) {
+
+      final items = <Movie>[];
+      for (final r in rows) {
         final p = r.split('|');
-        return Movie(id: p[0], title: p[1], year: p[2], poster: p[3]);
-      }).toList();
-      emit(RecentLoaded(items));
+        if (p.length >= 4 && p[0].isNotEmpty) {
+          items.add(Movie(id: p[0], title: p[1], year: p[2], poster: p[3]));
+        }
+      }
+
+      if (items.isEmpty) {
+        emit(const RecentEmpty());
+      } else {
+        emit(RecentLoaded(items));
+      }
     } catch (e) {
       emit(RecentError(e.toString()));
     }
   }
 
   Future<void> clear() async {
-    await local.saveRecent('');
-    await load();
+    await local.clearAll();
+    emit(const RecentEmpty());
   }
 }

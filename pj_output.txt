@@ -1,52 +1,97 @@
-lib
-├── data
-│   ├── models
-│   │   ├── >>> movie_dto.dart <<<
-│   │   └── >>> user_dto.dart <<<
-│   ├── repositories
-│   │   ├── >>> movies_repository.dart <<<
-│   │   └── >>> user_repository.dart <<<
-│   └── services
-│       ├── >>> dio_service.dart <<<
-│       ├── >>> local_store_service.dart <<<
-│       └── >>> movie_service.dart <<<
-├── >>> di.dart <<<
-├── domain
-│   ├── models
-│   │   └── >>> movie.dart <<<
-│   └── usecases (ignored)
-├── >>> main.dart <<<
-├── ui
-│   ├── core
-│   │   ├── theme
-│   │   │   ├── >>> app_theme.dart <<<
-│   │   │   ├── >>> palette.dart <<<
-│   │   │   └── >>> typography.dart <<<
-│   │   └── widgets (ignored)
-│   └── movies
-│       ├── view_models
-│       │   ├── detail
-│       │   │   ├── >>> detail_cubit.dart <<<
-│       │   │   └── >>> detail_state.dart <<<
-│       │   ├── recent
-│       │   │   ├── >>> recent_cubit.dart <<<
-│       │   │   └── >>> recent_state.dart <<<
-│       │   └── search
-│       │       ├── >>> search_bloc.dart <<<
-│       │       ├── >>> search_event.dart <<<
-│       │       └── >>> search_state.dart <<<
-│       ├── views
-│       │   ├── >>> detail_page.dart <<<
-│       │   ├── >>> recent_page.dart <<<
-│       │   └── >>> search_page.dart <<<
-│       └── widgets
-│           └── >>> movie_card.dart <<<
-└── utils (ignored)
+movie_searcher
+├── .dart_tool (ignored)
+├── .flutter-plugins-dependencies (ignored)
+├── .git (ignored)
+├── .gitignore (ignored)
+├── .idea (ignored)
+├── .metadata (ignored)
+├── .vscode (ignored)
+├── README.md (ignored)
+├── analysis_options.yaml (ignored)
+├── android (ignored)
+├── build (ignored)
+├── env.dev.json (ignored)
+├── env.example.json (ignored)
+├── ios (ignored)
+├── lib
+│   ├── data
+│   │   ├── models
+│   │   │   ├── >>> movie_dto.dart <<<
+│   │   │   └── >>> user_dto.dart <<<
+│   │   ├── repositories
+│   │   │   ├── >>> movies_repository.dart <<<
+│   │   │   └── >>> user_repository.dart <<<
+│   │   └── services
+│   │       ├── >>> dio_service.dart <<<
+│   │       ├── >>> local_store_service.dart <<<
+│   │       └── >>> movie_service.dart <<<
+│   ├── >>> di.dart <<<
+│   ├── domain
+│   │   ├── models
+│   │   │   └── >>> movie.dart <<<
+│   │   └── usecases (ignored)
+│   ├── >>> main.dart <<<
+│   ├── ui
+│   │   ├── core
+│   │   │   ├── theme
+│   │   │   │   ├── >>> app_theme.dart <<<
+│   │   │   │   ├── >>> palette.dart <<<
+│   │   │   │   └── >>> typography.dart <<<
+│   │   │   └── widgets (ignored)
+│   │   └── movies
+│   │       ├── view_models
+│   │       │   ├── detail
+│   │       │   │   ├── >>> detail_cubit.dart <<<
+│   │       │   │   └── >>> detail_state.dart <<<
+│   │       │   ├── recent
+│   │       │   │   ├── >>> recent_cubit.dart <<<
+│   │       │   │   └── >>> recent_state.dart <<<
+│   │       │   └── search
+│   │       │       ├── >>> search_bloc.dart <<<
+│   │       │       ├── >>> search_event.dart <<<
+│   │       │       └── >>> search_state.dart <<<
+│   │       ├── views
+│   │       │   ├── >>> detail_page.dart <<<
+│   │       │   ├── >>> recent_page.dart <<<
+│   │       │   └── >>> search_page.dart <<<
+│   │       └── widgets
+│   │           └── >>> movie_card.dart <<<
+│   └── utils (ignored)
+├── linux (ignored)
+├── macos (ignored)
+├── movie_searcher.iml (ignored)
+├── pj_output.txt (ignored)
+├── pubspec.lock (ignored)
+├── pubspec.yaml (ignored)
+├── test
+│   ├── integration (ignored)
+│   ├── unit
+│   │   ├── data
+│   │   │   ├── models
+│   │   │   │   └── >>> movie_dto_test.dart <<<
+│   │   │   ├── repositories
+│   │   │   │   └── >>> movie_repository_test.dart <<<
+│   │   │   └── services
+│   │   │       ├── >>> dio_service_test.dart <<<
+│   │   │       ├── >>> local_store_service_test.dart <<<
+│   │   │       └── >>> movie_service_test.dart <<<
+│   │   ├── domain
+│   │   │   └── models
+│   │   │       └── >>> movie_test.dart <<<
+│   │   ├── ui
+│   │   │   └── view_models
+│   │   │       ├── >>> detail_cubit_test.dart <<<
+│   │   │       ├── >>> recent_cubit_test.dart <<<
+│   │   │       └── >>> search_bloc_test.dart <<<
+│   │   └── utils
+│   │       └── >>> mocks.dart <<<
+│   └── widget (ignored)
+├── web (ignored)
+└── windows (ignored)
 
 
 
---- di.dart:START ---
-// di.dart
+--- lib\di.dart:START ---
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/data/repositories/movies_repository.dart';
@@ -98,9 +143,9 @@ Widget buildApp() {
   );
 }
 
---- di.dart:END ---
+--- lib\di.dart:END ---
 
---- main.dart:START ---
+--- lib\main.dart:START ---
 import 'package:flutter/widgets.dart';
 import 'package:movie_searcher/di.dart';
 
@@ -109,10 +154,9 @@ void main() {
   runApp(buildApp());
 }
 
---- main.dart:END ---
+--- lib\main.dart:END ---
 
---- data\models\movie_dto.dart:START ---
-// data/models/movie_dto.dart
+--- lib\data\models\movie_dto.dart:START ---
 class MovieDto {
   final String imdbId;
   final String title;
@@ -149,14 +193,13 @@ class MovieDto {
   };
 }
 
---- data\models\movie_dto.dart:END ---
+--- lib\data\models\movie_dto.dart:END ---
 
---- data\models\user_dto.dart:START ---
+--- lib\data\models\user_dto.dart:START ---
 
---- data\models\user_dto.dart:END ---
+--- lib\data\models\user_dto.dart:END ---
 
---- data\repositories\movies_repository.dart:START ---
-// data/repositories/movies_repository.dart
+--- lib\data\repositories\movies_repository.dart:START ---
 import 'package:movie_searcher/data/models/movie_dto.dart';
 import 'package:movie_searcher/data/services/movie_service.dart';
 import 'package:movie_searcher/domain/models/movie.dart';
@@ -185,13 +228,13 @@ class MoviesRepository {
   }
 }
 
---- data\repositories\movies_repository.dart:END ---
+--- lib\data\repositories\movies_repository.dart:END ---
 
---- data\repositories\user_repository.dart:START ---
+--- lib\data\repositories\user_repository.dart:START ---
 
---- data\repositories\user_repository.dart:END ---
+--- lib\data\repositories\user_repository.dart:END ---
 
---- data\services\dio_service.dart:START ---
+--- lib\data\services\dio_service.dart:START ---
 import 'package:dio/dio.dart';
 
 class DioService {
@@ -200,18 +243,20 @@ class DioService {
     : dio = Dio(BaseOptions(baseUrl: baseUrl, connectTimeout: const Duration(seconds: 10), receiveTimeout: const Duration(seconds: 15)));
 }
 
---- data\services\dio_service.dart:END ---
+--- lib\data\services\dio_service.dart:END ---
 
---- data\services\local_store_service.dart:START ---
+--- lib\data\services\local_store_service.dart:START ---
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStoreService {
-  static const _key = 'recent_movies'; // salva linhas: id|title|year|poster
+  static const _key = 'recent_movies';
+  Future<void> saveRecent(String row) async {
+    if (row.trim().isEmpty) return;
 
-  Future<void> saveRecent(String row /* "id|title|year|poster" */) async {
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getStringList(_key) ?? [];
-    final dedup = [row, ...raw.where((e) => !e.startsWith('${row.split('|').first}|'))];
+    final id = row.split('|').first;
+    final dedup = [row, ...raw.where((e) => !e.startsWith('$id|'))];
     await prefs.setStringList(_key, dedup.take(5).toList());
   }
 
@@ -219,11 +264,16 @@ class LocalStoreService {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getStringList(_key) ?? [];
   }
+
+  Future<void> clearAll() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_key);
+  }
 }
 
---- data\services\local_store_service.dart:END ---
+--- lib\data\services\local_store_service.dart:END ---
 
---- data\services\movie_service.dart:START ---
+--- lib\data\services\movie_service.dart:START ---
 import 'package:dio/dio.dart';
 import '../models/movie_dto.dart';
 import 'dio_service.dart';
@@ -248,10 +298,9 @@ class MovieService {
   }
 }
 
---- data\services\movie_service.dart:END ---
+--- lib\data\services\movie_service.dart:END ---
 
---- domain\models\movie.dart:START ---
-// domain/models/movie.dart
+--- lib\domain\models\movie.dart:START ---
 class Movie {
   final String id;
   final String title;
@@ -270,29 +319,28 @@ class Movie {
   });
 }
 
---- domain\models\movie.dart:END ---
+--- lib\domain\models\movie.dart:END ---
 
---- ui\core\theme\app_theme.dart:START ---
+--- lib\ui\core\theme\app_theme.dart:START ---
 import 'package:flutter/material.dart';
 
 ThemeData buildAppTheme() => ThemeData(useMaterial3: true, colorSchemeSeed: Colors.teal);
 
---- ui\core\theme\app_theme.dart:END ---
+--- lib\ui\core\theme\app_theme.dart:END ---
 
---- ui\core\theme\palette.dart:START ---
+--- lib\ui\core\theme\palette.dart:START ---
 import 'package:flutter/material.dart';
 
 const primaryColor = Colors.teal;
 
---- ui\core\theme\palette.dart:END ---
+--- lib\ui\core\theme\palette.dart:END ---
 
---- ui\core\theme\typography.dart:START ---
+--- lib\ui\core\theme\typography.dart:START ---
 
 
---- ui\core\theme\typography.dart:END ---
+--- lib\ui\core\theme\typography.dart:END ---
 
---- ui\movies\views\detail_page.dart:START ---
-// ui/movies/views/detail_page.dart
+--- lib\ui\movies\views\detail_page.dart:START ---
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/ui/movies/view_models/detail/detail_cubit.dart';
@@ -350,10 +398,9 @@ class _DetailPageState extends State<DetailPage> {
   }
 }
 
---- ui\movies\views\detail_page.dart:END ---
+--- lib\ui\movies\views\detail_page.dart:END ---
 
---- ui\movies\views\recent_page.dart:START ---
-// ui/movies/views/recent_page.dart
+--- lib\ui\movies\views\recent_page.dart:START ---
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/ui/movies/view_models/recent/recent_cubit.dart';
@@ -393,10 +440,9 @@ class _RecentPageState extends State<RecentPage> {
   }
 }
 
---- ui\movies\views\recent_page.dart:END ---
+--- lib\ui\movies\views\recent_page.dart:END ---
 
---- ui\movies\views\search_page.dart:START ---
-// ui/movies/views/search_page.dart
+--- lib\ui\movies\views\search_page.dart:START ---
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/ui/movies/view_models/search/search_bloc.dart';
@@ -476,10 +522,9 @@ class _SearchPageState extends State<SearchPage> {
   }
 }
 
---- ui\movies\views\search_page.dart:END ---
+--- lib\ui\movies\views\search_page.dart:END ---
 
---- ui\movies\view_models\detail\detail_cubit.dart:START ---
-// ui/movies/view_models/detail/detail_cubit.dart
+--- lib\ui\movies\view_models\detail\detail_cubit.dart:START ---
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/data/repositories/movies_repository.dart';
 import 'package:movie_searcher/data/services/local_store_service.dart';
@@ -503,10 +548,9 @@ class DetailCubit extends Cubit<DetailState> {
   }
 }
 
---- ui\movies\view_models\detail\detail_cubit.dart:END ---
+--- lib\ui\movies\view_models\detail\detail_cubit.dart:END ---
 
---- ui\movies\view_models\detail\detail_state.dart:START ---
-// ui/movies/view_models/detail/detail_state.dart
+--- lib\ui\movies\view_models\detail\detail_state.dart:START ---
 import 'package:movie_searcher/domain/models/movie.dart';
 
 sealed class DetailState {
@@ -527,10 +571,9 @@ class DetailError extends DetailState {
   const DetailError(this.message);
 }
 
---- ui\movies\view_models\detail\detail_state.dart:END ---
+--- lib\ui\movies\view_models\detail\detail_state.dart:END ---
 
---- ui\movies\view_models\recent\recent_cubit.dart:START ---
-// ui/movies/view_models/recent/recent_cubit.dart
+--- lib\ui\movies\view_models\recent\recent_cubit.dart:START ---
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/data/services/local_store_service.dart';
 import 'package:movie_searcher/domain/models/movie.dart';
@@ -544,30 +587,34 @@ class RecentCubit extends Cubit<RecentState> {
     emit(const RecentLoading());
     try {
       final rows = await local.getRecents();
-      if (rows.isEmpty) {
-        emit(const RecentEmpty());
-        return;
+
+      final items = <Movie>[];
+      for (final r in rows) {
+        final p = r.split('|');
+        if (p.length >= 4 && p[0].isNotEmpty) {
+          items.add(Movie(id: p[0], title: p[1], year: p[2], poster: p[3]));
+        }
       }
-      final items = rows.map((r) {
-        final p = r.split('|'); // id|title|year|poster
-        return Movie(id: p[0], title: p[1], year: p[2], poster: p[3]);
-      }).toList();
-      emit(RecentLoaded(items));
+
+      if (items.isEmpty) {
+        emit(const RecentEmpty());
+      } else {
+        emit(RecentLoaded(items));
+      }
     } catch (e) {
       emit(RecentError(e.toString()));
     }
   }
 
   Future<void> clear() async {
-    await local.saveRecent(''); // opcional: você pode criar método dedicado limpar
-    await load();
+    await local.clearAll();
+    emit(const RecentEmpty());
   }
 }
 
---- ui\movies\view_models\recent\recent_cubit.dart:END ---
+--- lib\ui\movies\view_models\recent\recent_cubit.dart:END ---
 
---- ui\movies\view_models\recent\recent_state.dart:START ---
-// ui/movies/view_models/recent/recent_state.dart
+--- lib\ui\movies\view_models\recent\recent_state.dart:START ---
 import 'package:movie_searcher/domain/models/movie.dart';
 
 sealed class RecentState {
@@ -592,9 +639,9 @@ class RecentError extends RecentState {
   const RecentError(this.message);
 }
 
---- ui\movies\view_models\recent\recent_state.dart:END ---
+--- lib\ui\movies\view_models\recent\recent_state.dart:END ---
 
---- ui\movies\view_models\search\search_bloc.dart:START ---
+--- lib\ui\movies\view_models\search\search_bloc.dart:START ---
 // ui/movies/view_models/search/search_bloc.dart
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -605,6 +652,8 @@ import 'search_state.dart';
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final MoviesRepository moviesRepository;
   Timer? _debounce;
+  bool _closing = false;
+
   SearchBloc(this.moviesRepository) : super(const SearchIdle()) {
     on<SearchTextChanged>(_onChanged);
     on<SearchSubmitted>(_onSubmitted);
@@ -612,9 +661,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 
   void _onChanged(SearchTextChanged event, Emitter<SearchState> _) {
+    if (_closing) return;
+
     _debounce?.cancel();
+    final q = event.query;
+
     _debounce = Timer(const Duration(milliseconds: 400), () {
-      add(SearchSubmitted(event.query));
+      if (_closing || isClosed) return;
+      add(SearchSubmitted(q));
     });
   }
 
@@ -639,15 +693,16 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   @override
   Future<void> close() {
+    _closing = true;
     _debounce?.cancel();
+    _debounce = null;
     return super.close();
   }
 }
 
---- ui\movies\view_models\search\search_bloc.dart:END ---
+--- lib\ui\movies\view_models\search\search_bloc.dart:END ---
 
---- ui\movies\view_models\search\search_event.dart:START ---
-// ui/movies/view_models/search/search_event.dart
+--- lib\ui\movies\view_models\search\search_event.dart:START ---
 abstract class SearchEvent {}
 
 class SearchTextChanged extends SearchEvent {
@@ -662,10 +717,9 @@ class SearchSubmitted extends SearchEvent {
 
 class SearchCleared extends SearchEvent {}
 
---- ui\movies\view_models\search\search_event.dart:END ---
+--- lib\ui\movies\view_models\search\search_event.dart:END ---
 
---- ui\movies\view_models\search\search_state.dart:START ---
-// ui/movies/view_models/search/search_state.dart
+--- lib\ui\movies\view_models\search\search_state.dart:START ---
 import 'package:movie_searcher/domain/models/movie.dart';
 
 sealed class SearchState {
@@ -694,9 +748,9 @@ class SearchError extends SearchState {
   const SearchError(this.message);
 }
 
---- ui\movies\view_models\search\search_state.dart:END ---
+--- lib\ui\movies\view_models\search\search_state.dart:END ---
 
---- ui\movies\widgets\movie_card.dart:START ---
+--- lib\ui\movies\widgets\movie_card.dart:START ---
 import 'package:flutter/material.dart';
 import 'package:movie_searcher/domain/models/movie.dart';
 
@@ -720,4 +774,489 @@ class MovieCard extends StatelessWidget {
   }
 }
 
---- ui\movies\widgets\movie_card.dart:END ---
+--- lib\ui\movies\widgets\movie_card.dart:END ---
+
+--- test\unit\data\models\movie_dto_test.dart:START ---
+import 'package:flutter_test/flutter_test.dart';
+import 'package:movie_searcher/data/models/movie_dto.dart';
+
+void main() {
+  test('fromJson: payload de busca (Search) mapeia campos básicos e deixa genre/plot vazios', () {
+    final json = {'Title': 'The Matrix', 'Year': '1999', 'imdbID': 'tt0133093', 'Poster': 'p'};
+    final dto = MovieDto.fromJson(json);
+    expect(dto.imdbId, 'tt0133093');
+    expect(dto.title, 'The Matrix');
+    expect(dto.genre, '');
+    expect(dto.plot, '');
+  });
+
+  test('fromJson: payload completo (por id) mapeia todos os campos', () {
+    final json = {
+      'Title': 'The Matrix',
+      'Year': '1999',
+      'imdbID': 'tt0133093',
+      'Poster': 'p',
+      'Genre': 'Action, Sci-Fi',
+      'Plot': 'Long plot...',
+    };
+    final dto = MovieDto.fromJson(json);
+    expect(dto.genre, contains('Action'));
+    expect(dto.plot, contains('Long'));
+  });
+
+  test('toJson: exporta com chaves minúsculas esperadas pelo projeto', () {
+    final dto = MovieDto(
+      imdbId: 'tt0133093',
+      title: 'The Matrix',
+      year: '1999',
+      poster: 'p',
+      genre: 'Action',
+      plot: 'Plot',
+    );
+    final j = dto.toJson();
+    expect(j['imdbId'], 'tt0133093');
+    expect(j['title'], 'The Matrix');
+    expect(j['genre'], 'Action');
+  });
+}
+
+--- test\unit\data\models\movie_dto_test.dart:END ---
+
+--- test\unit\data\repositories\movie_repository_test.dart:START ---
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:movie_searcher/data/models/movie_dto.dart';
+import 'package:movie_searcher/data/repositories/movies_repository.dart';
+import 'package:movie_searcher/data/services/movie_service.dart';
+
+class MockMovieService extends Mock implements MovieService {}
+
+void main() {
+  late MovieService svc;
+  late MoviesRepository repo;
+
+  setUp(() {
+    svc = MockMovieService();
+    repo = MoviesRepository(svc);
+  });
+
+  test('search mapeia DTO -> entidade com campos básicos', () async {
+    when(() => svc.fetchMovies('matrix')).thenAnswer(
+      (_) async => [
+        MovieDto(
+          imdbId: 'tt0133093',
+          title: 'The Matrix',
+          year: '1999',
+          poster: 'p',
+          genre: '',
+          plot: '',
+        ),
+      ],
+    );
+
+    final list = await repo.search('matrix');
+    expect(list, hasLength(1));
+    expect(list.first.id, 'tt0133093');
+    expect(list.first.genre, '');
+  });
+
+  test('getById mapeia DTO completo -> entidade com genre/plot', () async {
+    when(() => svc.fetchMovieById('tt0133093')).thenAnswer(
+      (_) async => MovieDto(
+        imdbId: 'tt0133093',
+        title: 'The Matrix',
+        year: '1999',
+        poster: 'p',
+        genre: 'Action, Sci-Fi',
+        plot: 'Long plot...',
+      ),
+    );
+
+    final m = await repo.getById('tt0133093');
+    expect(m.genre, contains('Action'));
+    expect(m.plot, contains('Long'));
+  });
+}
+
+--- test\unit\data\repositories\movie_repository_test.dart:END ---
+
+--- test\unit\data\services\dio_service_test.dart:START ---
+import 'package:flutter_test/flutter_test.dart';
+import 'package:movie_searcher/data/services/dio_service.dart';
+
+void main() {
+  test('DioService: configura baseUrl e timeouts', () {
+    final s = DioService('https://api.example.com');
+    expect(s.dio.options.baseUrl, 'https://api.example.com');
+    expect(s.dio.options.connectTimeout, const Duration(seconds: 10));
+    expect(s.dio.options.receiveTimeout, const Duration(seconds: 15));
+  });
+}
+
+--- test\unit\data\services\dio_service_test.dart:END ---
+
+--- test\unit\data\services\local_store_service_test.dart:START ---
+import 'package:flutter_test/flutter_test.dart';
+import 'package:movie_searcher/data/services/local_store_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() {
+  test('LocalStoreService: salva, deduplica por id e limita a 5 itens', () async {
+    SharedPreferences.setMockInitialValues({});
+    final store = LocalStoreService();
+
+    await store.saveRecent('tt1|A|2000|p');
+    await store.saveRecent('tt2|B|2001|p');
+    await store.saveRecent('tt1|A2|2000|p2');
+
+    var list = await store.getRecents();
+    expect(list.length, 2);
+    expect(list.first.startsWith('tt1|'), true);
+
+    await store.saveRecent('tt3|C|2002|p');
+    await store.saveRecent('tt4|D|2003|p');
+    await store.saveRecent('tt5|E|2004|p');
+    await store.saveRecent('tt6|F|2005|p');
+
+    list = await store.getRecents();
+    expect(list.length, 5);
+    expect(list.first.startsWith('tt6|'), true);
+  });
+}
+
+--- test\unit\data\services\local_store_service_test.dart:END ---
+
+--- test\unit\data\services\movie_service_test.dart:START ---
+import 'package:flutter_test/flutter_test.dart';
+import 'package:http_mock_adapter/http_mock_adapter.dart';
+import 'package:movie_searcher/data/services/dio_service.dart';
+import 'package:movie_searcher/data/services/movie_service.dart';
+
+void main() {
+  test('fetchMovies usa s= e parseia lista Search', () async {
+    final dioService = DioService('https://www.omdbapi.com/');
+    final adapter = DioAdapter(dio: dioService.dio);
+    dioService.dio.httpClientAdapter = adapter;
+
+    adapter.onGet(
+      '',
+      queryParameters: {'apikey': 'KEY', 's': 'matrix', 'type': 'movie'},
+      (server) => server.reply(200, {
+        'Search': [
+          {'Title': 'The Matrix', 'Year': '1999', 'imdbID': 'tt0133093', 'Poster': 'p'},
+        ],
+      }),
+    );
+
+    final svc = MovieService(dioService, apiKey: 'KEY');
+    final list = await svc.fetchMovies('matrix');
+    expect(list, hasLength(1));
+    expect(list.first.imdbId, 'tt0133093');
+  });
+
+  test('fetchMovies sem Search retorna lista vazia', () async {
+    final dioService = DioService('https://www.omdbapi.com/');
+    final adapter = DioAdapter(dio: dioService.dio);
+    dioService.dio.httpClientAdapter = adapter;
+
+    adapter.onGet(
+      '',
+      queryParameters: {'apikey': 'KEY', 's': 'nada', 'type': 'movie'},
+      (server) => server.reply(200, {'Response': 'False', 'Error': 'Movie not found!'}),
+    );
+
+    final svc = MovieService(dioService, apiKey: 'KEY');
+    final list = await svc.fetchMovies('nada');
+    expect(list, isEmpty);
+  });
+
+  test('fetchMovieById usa i= e plot=full', () async {
+    final dioService = DioService('https://www.omdbapi.com/');
+    final adapter = DioAdapter(dio: dioService.dio);
+    dioService.dio.httpClientAdapter = adapter;
+
+    adapter.onGet(
+      '',
+      queryParameters: {'apikey': 'KEY', 'i': 'tt0133093', 'plot': 'full'},
+      (server) => server.reply(200, {
+        'Title': 'The Matrix',
+        'Year': '1999',
+        'imdbID': 'tt0133093',
+        'Poster': 'p',
+        'Genre': 'Action, Sci-Fi',
+        'Plot': 'Long plot...',
+      }),
+    );
+
+    final svc = MovieService(dioService, apiKey: 'KEY');
+    final dto = await svc.fetchMovieById('tt0133093');
+    expect(dto.genre, contains('Action'));
+    expect(dto.plot, contains('Long'));
+  });
+}
+
+--- test\unit\data\services\movie_service_test.dart:END ---
+
+--- test\unit\domain\models\movie_test.dart:START ---
+import 'package:flutter_test/flutter_test.dart';
+import 'package:movie_searcher/domain/models/movie.dart';
+
+void main() {
+  test('Movie: defaults de genre/plot são strings vazias', () {
+    const m = Movie(id: 'id', title: 't', year: 'y', poster: 'p');
+    expect(m.genre, '');
+    expect(m.plot, '');
+  });
+
+  test('Movie: instancia com todos os campos', () {
+    const m = Movie(id: 'id', title: 't', year: 'y', poster: 'p', genre: 'g', plot: 'pl');
+    expect(m.genre, 'g');
+    expect(m.plot, 'pl');
+  });
+}
+
+--- test\unit\domain\models\movie_test.dart:END ---
+
+--- test\unit\ui\view_models\detail_cubit_test.dart:START ---
+import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:movie_searcher/ui/movies/view_models/recent/recent_cubit.dart';
+import 'package:movie_searcher/ui/movies/view_models/recent/recent_state.dart';
+import 'package:movie_searcher/data/services/local_store_service.dart';
+
+import '../../utils/mocks.dart';
+
+void main() {
+  late LocalStoreService local;
+
+  setUp(() {
+    local = MockLocalStoreService();
+  });
+
+  blocTest<RecentCubit, RecentState>(
+    'lista vazia -> RecentEmpty',
+    build: () {
+      when(() => local.getRecents()).thenAnswer((_) async => <String>[]);
+      return RecentCubit(local);
+    },
+    act: (cubit) => cubit.load(),
+    expect: () => [const RecentLoading(), const RecentEmpty()],
+  );
+
+  blocTest<RecentCubit, RecentState>(
+    'lista populada -> RecentLoaded com 2 itens',
+    build: () {
+      when(
+        () => local.getRecents(),
+      ).thenAnswer((_) async => ['tt1|A|2000|https://img/a.jpg', 'tt2|B|2001|https://img/b.jpg']);
+      return RecentCubit(local);
+    },
+    act: (cubit) => cubit.load(),
+    expect: () => [
+      const RecentLoading(),
+      isA<RecentLoaded>().having((s) => s.items.length, 'len', 2),
+    ],
+  );
+
+  blocTest<RecentCubit, RecentState>(
+    'erro ao ler -> RecentError',
+    build: () {
+      when(() => local.getRecents()).thenThrow(Exception('prefs'));
+      return RecentCubit(local);
+    },
+    act: (cubit) => cubit.load(),
+    expect: () => [
+      const RecentLoading(),
+      isA<RecentError>().having((e) => e.message, 'msg', contains('prefs')),
+    ],
+  );
+}
+
+--- test\unit\ui\view_models\detail_cubit_test.dart:END ---
+
+--- test\unit\ui\view_models\recent_cubit_test.dart:START ---
+import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:movie_searcher/ui/movies/view_models/recent/recent_cubit.dart';
+import 'package:movie_searcher/ui/movies/view_models/recent/recent_state.dart';
+import 'package:movie_searcher/data/services/local_store_service.dart';
+
+class MockLocalStoreService extends Mock implements LocalStoreService {}
+
+void main() {
+  late LocalStoreService local;
+
+  setUp(() {
+    local = MockLocalStoreService();
+  });
+
+  blocTest<RecentCubit, RecentState>(
+    'lista vazia -> RecentEmpty',
+    build: () {
+      when(() => local.getRecents()).thenAnswer((_) async => <String>[]);
+      return RecentCubit(local);
+    },
+    act: (cubit) => cubit.load(),
+    expect: () => [const RecentLoading(), const RecentEmpty()],
+  );
+
+  blocTest<RecentCubit, RecentState>(
+    'lista com linhas malformadas -> Empty (robusto)',
+    build: () {
+      when(() => local.getRecents()).thenAnswer((_) async => ['tt1|onlyTwoParts', '||', '']);
+      return RecentCubit(local);
+    },
+    act: (cubit) => cubit.load(),
+    expect: () => [const RecentLoading(), const RecentEmpty()],
+  );
+
+  blocTest<RecentCubit, RecentState>(
+    'lista populada válida -> RecentLoaded',
+    build: () {
+      when(
+        () => local.getRecents(),
+      ).thenAnswer((_) async => ['tt1|A|2000|https://img/a.jpg', 'tt2|B|2001|https://img/b.jpg']);
+      return RecentCubit(local);
+    },
+    act: (cubit) => cubit.load(),
+    expect: () => [
+      const RecentLoading(),
+      isA<RecentLoaded>().having((s) => s.items.length, 'len', 2),
+    ],
+  );
+
+  blocTest<RecentCubit, RecentState>(
+    'clear chama clearAll e emite RecentEmpty',
+    build: () {
+      when(() => local.clearAll()).thenAnswer((_) async {});
+      return RecentCubit(local);
+    },
+    act: (cubit) => cubit.clear(),
+    expect: () => [const RecentEmpty()],
+    verify: (_) => verify(() => local.clearAll()).called(1),
+  );
+}
+
+--- test\unit\ui\view_models\recent_cubit_test.dart:END ---
+
+--- test\unit\ui\view_models\search_bloc_test.dart:START ---
+import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:movie_searcher/ui/movies/view_models/search/search_bloc.dart';
+import 'package:movie_searcher/ui/movies/view_models/search/search_event.dart';
+import 'package:movie_searcher/ui/movies/view_models/search/search_state.dart';
+import 'package:movie_searcher/data/repositories/movies_repository.dart';
+import 'package:movie_searcher/domain/models/movie.dart';
+
+class MockMoviesRepository extends Mock implements MoviesRepository {}
+
+void main() {
+  late MoviesRepository repo;
+
+  setUp(() => repo = MockMoviesRepository());
+
+  test('estado inicial é SearchIdle', () {
+    final bloc = SearchBloc(repo);
+    expect(bloc.state, const SearchIdle());
+    bloc.close();
+  });
+
+  blocTest<SearchBloc, SearchState>(
+    'SearchSubmitted vazio -> Idle',
+    build: () => SearchBloc(repo),
+    act: (bloc) => bloc.add(SearchSubmitted('   ')),
+    expect: () => [const SearchIdle()],
+  );
+
+  blocTest<SearchBloc, SearchState>(
+    'SearchSubmitted ok: Loading -> Success',
+    build: () {
+      when(() => repo.search('matrix')).thenAnswer(
+        (_) async => [const Movie(id: 'tt0133093', title: 'The Matrix', year: '1999', poster: 'p')],
+      );
+      return SearchBloc(repo);
+    },
+    act: (bloc) => bloc.add(SearchSubmitted('matrix')),
+    expect: () => [
+      const SearchLoading(),
+      isA<SearchSuccess>().having((s) => s.results.length, 'len', 1),
+    ],
+    verify: (_) => verify(() => repo.search('matrix')).called(1),
+  );
+
+  blocTest<SearchBloc, SearchState>(
+    'erro: Loading -> Error',
+    build: () {
+      when(() => repo.search('matrix')).thenThrow(Exception('boom'));
+      return SearchBloc(repo);
+    },
+    act: (bloc) => bloc.add(SearchSubmitted('matrix')),
+    expect: () => [const SearchLoading(), isA<SearchError>()],
+  );
+
+  blocTest<SearchBloc, SearchState>(
+    'múltiplos SearchTextChanged colapsam em 1 submit (debounce)',
+    build: () {
+      when(() => repo.search('matrix')).thenAnswer(
+        (_) async => [const Movie(id: 'tt0133093', title: 'The Matrix', year: '1999', poster: 'p')],
+      );
+      return SearchBloc(repo);
+    },
+    act: (bloc) async {
+      bloc.add(SearchTextChanged('m'));
+      await Future.delayed(const Duration(milliseconds: 100));
+      bloc.add(SearchTextChanged('ma'));
+      await Future.delayed(const Duration(milliseconds: 100));
+      bloc.add(SearchTextChanged('matrix'));
+    },
+    wait: const Duration(milliseconds: 450),
+    expect: () => [
+      const SearchLoading(),
+      isA<SearchSuccess>().having((s) => s.results.length, 'len', 1),
+    ],
+    verify: (_) => verify(() => repo.search('matrix')).called(1),
+  );
+
+  test('close cancela debounce pendente (não emite nada após fechar)', () async {
+    final bloc = SearchBloc(repo);
+    final emitted = <SearchState>[];
+    final sub = bloc.stream.listen(emitted.add);
+
+    bloc.add(SearchTextChanged('matrix'));
+    await bloc.close();
+
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    expect(emitted, isEmpty);
+    await sub.cancel();
+  });
+}
+
+--- test\unit\ui\view_models\search_bloc_test.dart:END ---
+
+--- test\unit\utils\mocks.dart:START ---
+import 'package:mocktail/mocktail.dart';
+import 'package:movie_searcher/data/repositories/movies_repository.dart';
+import 'package:movie_searcher/data/services/local_store_service.dart';
+import 'package:movie_searcher/data/services/movie_service.dart';
+import 'package:movie_searcher/domain/models/movie.dart';
+
+class MockMoviesRepository extends Mock implements MoviesRepository {}
+
+class MockMovieService extends Mock implements MovieService {}
+
+class MockLocalStoreService extends Mock implements LocalStoreService {}
+
+Movie makeMovie({
+  String id = 'tt0133093',
+  String title = 'The Matrix',
+  String year = '1999',
+  String poster = 'https://img/p.jpg',
+  String genre = 'Action, Sci-Fi',
+  String plot = 'Long plot...',
+}) => Movie(id: id, title: title, year: year, poster: poster, genre: genre, plot: plot);
+
+--- test\unit\utils\mocks.dart:END ---
