@@ -69,12 +69,6 @@ Se tiver mais de um device, escolha com `-d <deviceId>` (ex.: `-d chrome`, `-d w
 flutter build apk --dart-define-from-file=env.dev.json
 ```
 
-### Android (AppBundle)
-
-```bash
-flutter build appbundle --dart-define-from-file=env.dev.json
-```
-
 ### iOS (Archive)
 
 ```bash
@@ -93,12 +87,6 @@ flutter test
 
 ```bash
 flutter analyze
-```
-
-* **Formatar código**
-
-```bash
-flutter format .
 ```
 
 ## Estrutura do Projeto (resumo)
