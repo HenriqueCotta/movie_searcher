@@ -9,6 +9,7 @@ import 'package:movie_searcher/ui/core/theme/theme_cubit.dart';
 import 'package:movie_searcher/ui/movies/view_models/detail/detail_cubit.dart';
 import 'package:movie_searcher/ui/movies/view_models/recent/recent_cubit.dart';
 import 'package:movie_searcher/ui/movies/view_models/search/search_bloc.dart';
+import 'package:movie_searcher/ui/movies/view_models/search_adaptability/search_adaptability_bloc.dart';
 import 'package:movie_searcher/ui/movies/views/detail_page.dart';
 import 'package:movie_searcher/ui/movies/views/recent_page.dart';
 import 'package:movie_searcher/ui/movies/views/search_page.dart';
@@ -40,8 +41,11 @@ Widget buildApp() {
             themeMode: mode,
             initialRoute: '/',
             routes: {
-              '/': (ctx) => BlocProvider(
-                create: (_) => SearchBloc(ctx.read<MoviesRepository>()),
+              '/': (ctx) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(create: (_) => SearchBloc(ctx.read<MoviesRepository>())),
+                  BlocProvider(create: (_) => SearchAdaptabilityBloc()),
+                ],
                 child: const SearchPage(),
               ),
               '/detail': (ctx) => BlocProvider(

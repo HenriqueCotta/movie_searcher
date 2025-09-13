@@ -1,7 +1,7 @@
-// ui/movies/widgets/search/results_sliver.dart
+// ui/movies/widgets/search_page/result_sliver.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie_searcher/ui/movies/view_models/search/search_bloc.dart'; // <— importe o bloc
+import 'package:movie_searcher/ui/movies/view_models/search/search_bloc.dart';
 import 'package:movie_searcher/ui/movies/view_models/search/search_state.dart';
 import 'package:movie_searcher/ui/movies/widgets/movie_card.dart';
 import 'package:movie_searcher/ui/movies/widgets/movie_grid_title.dart';

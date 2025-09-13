@@ -1,142 +1,105 @@
 // ui/movies/widgets/search_page/search_bar/search_bar_area.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie_searcher/ui/core/layout/breakpoints_rules.dart';
-import 'package:movie_searcher/ui/movies/view_models/search/search_bloc.dart';
-import 'package:movie_searcher/ui/movies/view_models/search/search_event.dart';
-import 'package:movie_searcher/ui/movies/view_models/search/search_state.dart';
+import 'package:movie_searcher/ui/movies/view_models/search_adaptability/search_adaptability_state.dart';
+import 'package:movie_searcher/ui/movies/view_models/search_adaptability/search_adaptability_bloc.dart';
 
-enum SearchBarLayout { compact, tightRow, comfortableRow }
-
-class SearchBarArea extends StatefulWidget {
+class SearchBarArea extends StatelessWidget {
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onSubmit;
   final VoidCallback onRecentTap;
-  const SearchBarArea({super.key, required this.onRecentTap});
 
-  @override
-  State<SearchBarArea> createState() => _SearchBarAreaState();
-}
-
-class _SearchBarAreaState extends State<SearchBarArea> {
-  final _ctrl = TextEditingController();
-
-  @override
-  void dispose() {
-    _ctrl.dispose();
-    super.dispose();
-  }
-
-  SearchBarLayout _layoutFor(Breakpoint bp) {
-    if (bp == Breakpoint.xs) return SearchBarLayout.compact;
-    if (bp == Breakpoint.sm || bp == Breakpoint.md) return SearchBarLayout.tightRow;
-    return SearchBarLayout.comfortableRow;
-  }
+  const SearchBarArea({
+    super.key,
+    required this.controller,
+    required this.onChanged,
+    required this.onSubmit,
+    required this.onRecentTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<SearchBloc>();
+    final layout = context.select<SearchAdaptabilityBloc, SearchBarLayout>(
+      (b) => b.state.barLayout,
+    );
 
-    return BlocBuilder<SearchBloc, SearchState>(
-      buildWhen: (p, n) => p.query != n.query, // rebuild só quando o texto muda
-      builder: (context, state) {
-        // mantém controller sincronizado com o estado
-        if (_ctrl.text != state.query) {
-          _ctrl.value = TextEditingValue(
-            text: state.query,
-            selection: TextSelection.collapsed(offset: state.query.length),
-          );
-        }
+    return switch (layout) {
+      SearchBarLayout.compact => _CompactLayout(
+        controller: controller,
+        onChanged: onChanged,
+        onSubmit: onSubmit,
+        onRecentTap: onRecentTap,
+      ),
+      SearchBarLayout.tightRow => _TightRowLayout(
+        controller: controller,
+        onChanged: onChanged,
+        onSubmit: onSubmit,
+        onRecentTap: onRecentTap,
+      ),
+      SearchBarLayout.comfortableRow => _ComfortableRowLayout(
+        controller: controller,
+        onChanged: onChanged,
+        onSubmit: onSubmit,
+        onRecentTap: onRecentTap,
+      ),
+    };
+  }
+}
 
-        final hasText = state.query.isNotEmpty;
-        final layout = _layoutFor(context.layoutBreakPoint);
+/// ---------- peças reutilizáveis ----------
+class _SearchField extends StatelessWidget {
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onSubmit;
+  const _SearchField({required this.controller, required this.onChanged, required this.onSubmit});
 
-        void onSubmit() {
-          FocusScope.of(context).unfocus();
-          bloc.add(SearchSubmitted(_ctrl.text));
-        }
-
-        void onChanged(String v) => bloc.add(SearchTextChanged(v));
-        void onClear() => bloc.add(SearchCleared());
-
-        return switch (layout) {
-          SearchBarLayout.compact => _Compact(
-            ctrl: _ctrl,
-            hasText: hasText,
-            onChanged: onChanged,
-            onSubmit: onSubmit,
-            onClear: onClear,
-            onRecentTap: widget.onRecentTap,
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return ValueListenableBuilder<TextEditingValue>(
+      valueListenable: controller,
+      builder: (_, v, __) {
+        final hasText = v.text.isNotEmpty;
+        return TextField(
+          controller: controller,
+          textInputAction: TextInputAction.search,
+          decoration: InputDecoration(
+            hintText: 'Buscar por título',
+            prefixIcon: Icon(Icons.search, color: cs.onSurfaceVariant),
+            suffixIcon: hasText
+                ? IconButton(
+                    tooltip: 'Limpar',
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      controller.clear();
+                      onChanged('');
+                    },
+                  )
+                : null,
           ),
-          SearchBarLayout.tightRow => _TightRow(
-            ctrl: _ctrl,
-            hasText: hasText,
-            onChanged: onChanged,
-            onSubmit: onSubmit,
-            onClear: onClear,
-            onRecentTap: widget.onRecentTap,
-          ),
-          SearchBarLayout.comfortableRow => _ComfortableRow(
-            ctrl: _ctrl,
-            hasText: hasText,
-            onChanged: onChanged,
-            onSubmit: onSubmit,
-            onClear: onClear,
-            onRecentTap: widget.onRecentTap,
-          ),
-        };
+          onChanged: onChanged,
+          onSubmitted: (_) {
+            FocusScope.of(context).unfocus();
+            onSubmit();
+          },
+          maxLines: 1,
+        );
       },
     );
   }
 }
 
-// ---------- peças ----------
-class _SearchField extends StatelessWidget {
-  final TextEditingController ctrl;
+/// ---------- layouts (iguais aos que você já tinha) ----------
+class _CompactLayout extends StatelessWidget {
+  final TextEditingController controller;
   final ValueChanged<String> onChanged;
   final VoidCallback onSubmit;
-  final bool hasText;
-  final VoidCallback onClear;
-
-  const _SearchField({
-    required this.ctrl,
+  final VoidCallback onRecentTap;
+  const _CompactLayout({
+    required this.controller,
     required this.onChanged,
     required this.onSubmit,
-    required this.hasText,
-    required this.onClear,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    return TextField(
-      controller: ctrl,
-      textInputAction: TextInputAction.search,
-      maxLines: 1,
-      decoration: InputDecoration(
-        hintText: 'Buscar por título',
-        prefixIcon: Icon(Icons.search, color: cs.onSurfaceVariant),
-        suffixIcon: hasText
-            ? IconButton(tooltip: 'Limpar', icon: const Icon(Icons.clear), onPressed: onClear)
-            : null,
-      ),
-      onChanged: onChanged,
-      onSubmitted: (_) => onSubmit(),
-    );
-  }
-}
-
-// ---------- layouts ----------
-class _Compact extends StatelessWidget {
-  final TextEditingController ctrl;
-  final bool hasText;
-  final ValueChanged<String> onChanged;
-  final VoidCallback onSubmit, onClear, onRecentTap;
-
-  const _Compact({
-    required this.ctrl,
-    required this.hasText,
-    required this.onChanged,
-    required this.onSubmit,
-    required this.onClear,
     required this.onRecentTap,
   });
 
@@ -147,13 +110,7 @@ class _Compact extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Column(
           children: [
-            _SearchField(
-              ctrl: ctrl,
-              onChanged: onChanged,
-              onSubmit: onSubmit,
-              hasText: hasText,
-              onClear: onClear,
-            ),
+            _SearchField(controller: controller, onChanged: onChanged, onSubmit: onSubmit),
             const SizedBox(height: 12),
             Row(
               children: [
@@ -161,7 +118,10 @@ class _Compact extends StatelessWidget {
                   child: SizedBox(
                     height: 48,
                     child: FilledButton.icon(
-                      onPressed: onSubmit,
+                      onPressed: () {
+                        FocusScope.of(context).unfocus();
+                        onSubmit();
+                      },
                       icon: const Icon(Icons.search),
                       label: const Text('Buscar'),
                     ),
@@ -187,18 +147,15 @@ class _Compact extends StatelessWidget {
   }
 }
 
-class _TightRow extends StatelessWidget {
-  final TextEditingController ctrl;
-  final bool hasText;
+class _TightRowLayout extends StatelessWidget {
+  final TextEditingController controller;
   final ValueChanged<String> onChanged;
-  final VoidCallback onSubmit, onClear, onRecentTap;
-
-  const _TightRow({
-    required this.ctrl,
-    required this.hasText,
+  final VoidCallback onSubmit;
+  final VoidCallback onRecentTap;
+  const _TightRowLayout({
+    required this.controller,
     required this.onChanged,
     required this.onSubmit,
-    required this.onClear,
     required this.onRecentTap,
   });
 
@@ -210,13 +167,7 @@ class _TightRow extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: _SearchField(
-                ctrl: ctrl,
-                onChanged: onChanged,
-                onSubmit: onSubmit,
-                hasText: hasText,
-                onClear: onClear,
-              ),
+              child: _SearchField(controller: controller, onChanged: onChanged, onSubmit: onSubmit),
             ),
             const SizedBox(width: 8),
             SizedBox(
@@ -224,7 +175,10 @@ class _TightRow extends StatelessWidget {
               width: 48,
               child: IconButton.filled(
                 tooltip: 'Buscar',
-                onPressed: onSubmit,
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  onSubmit();
+                },
                 icon: const Icon(Icons.search),
               ),
             ),
@@ -245,18 +199,15 @@ class _TightRow extends StatelessWidget {
   }
 }
 
-class _ComfortableRow extends StatelessWidget {
-  final TextEditingController ctrl;
-  final bool hasText;
+class _ComfortableRowLayout extends StatelessWidget {
+  final TextEditingController controller;
   final ValueChanged<String> onChanged;
-  final VoidCallback onSubmit, onClear, onRecentTap;
-
-  const _ComfortableRow({
-    required this.ctrl,
-    required this.hasText,
+  final VoidCallback onSubmit;
+  final VoidCallback onRecentTap;
+  const _ComfortableRowLayout({
+    required this.controller,
     required this.onChanged,
     required this.onSubmit,
-    required this.onClear,
     required this.onRecentTap,
   });
 
@@ -268,19 +219,16 @@ class _ComfortableRow extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: _SearchField(
-                ctrl: ctrl,
-                onChanged: onChanged,
-                onSubmit: onSubmit,
-                hasText: hasText,
-                onClear: onClear,
-              ),
+              child: _SearchField(controller: controller, onChanged: onChanged, onSubmit: onSubmit),
             ),
             const SizedBox(width: 12),
             SizedBox(
               height: 48,
               child: FilledButton.icon(
-                onPressed: onSubmit,
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  onSubmit();
+                },
                 icon: const Icon(Icons.search),
                 label: const Text('Buscar'),
               ),
