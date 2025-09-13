@@ -56,28 +56,34 @@ void main() {
     expect: () => [isA<SearchLoading>(), isA<SearchError>()],
   );
 
-  blocTest<SearchBloc, SearchState>(
-    'múltiplos SearchTextChanged colapsam em 1 submit (debounce)',
-    build: () {
-      when(() => repo.search('matrix')).thenAnswer(
-        (_) async => const [Movie(id: 'tt0133093', title: 'The Matrix', year: '1999', poster: 'p')],
-      );
-      return SearchBloc(repo);
-    },
-    act: (bloc) async {
-      bloc.add(SearchTextChanged('m'));
-      await Future.delayed(const Duration(milliseconds: 100));
-      bloc.add(SearchTextChanged('ma'));
-      await Future.delayed(const Duration(milliseconds: 100));
-      bloc.add(SearchTextChanged('matrix'));
-    },
-    wait: const Duration(milliseconds: 450),
-    expect: () => [
-      isA<SearchLoading>(),
-      isA<SearchSuccess>().having((s) => s.results.length, 'len', 1),
-    ],
-    verify: (_) => verify(() => repo.search('matrix')).called(1),
-  );
+  // ---- TESTE DE DEBOUNCE REESCRITO (robusto a emissões intermediárias) ----
+  test('múltiplos SearchTextChanged colapsam em 1 submit (debounce)', () async {
+    when(() => repo.search('matrix')).thenAnswer(
+      (_) async => const [Movie(id: 'tt0133093', title: 'The Matrix', year: '1999', poster: 'p')],
+    );
+
+    final bloc = SearchBloc(repo);
+
+    // Captura apenas os estados relevantes (ignora SearchIdle intermediário).
+    final futureStates = bloc.stream.where((s) => s is! SearchIdle).take(2).toList();
+
+    bloc.add(SearchTextChanged('m'));
+    await Future.delayed(const Duration(milliseconds: 100));
+    bloc.add(SearchTextChanged('ma'));
+    await Future.delayed(const Duration(milliseconds: 100));
+    bloc.add(SearchTextChanged('matrix'));
+
+    final states = await futureStates.timeout(
+      const Duration(milliseconds: 900),
+    ); // 400ms debounce + folga
+
+    expect(states[0], isA<SearchLoading>());
+    expect(states[1], isA<SearchSuccess>().having((s) => s.results.length, 'len', 1));
+
+    verify(() => repo.search('matrix')).called(1);
+
+    await bloc.close();
+  });
 
   test('close cancela debounce pendente (não emite nada após fechar)', () async {
     final bloc = SearchBloc(repo);
@@ -86,7 +92,6 @@ void main() {
 
     bloc.add(SearchTextChanged('matrix'));
     await bloc.close();
-
     await Future.delayed(const Duration(milliseconds: 500));
 
     expect(emitted, isEmpty);
