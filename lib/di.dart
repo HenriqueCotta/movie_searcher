@@ -18,6 +18,11 @@ Widget buildApp() {
   const baseUrl = String.fromEnvironment('OMDB_BASE_URL', defaultValue: 'https://www.omdbapi.com/');
   const apiKey = String.fromEnvironment('OMDB_API_KEY', defaultValue: 'SUA_CHAVE');
 
+  assert(
+    apiKey != 'SUA_CHAVE' && apiKey.isNotEmpty,
+    'OMDB_API_KEY não definido. Rode com --dart-define ou --dart-define-from-file.',
+  );
+
   final dio = DioService(baseUrl);
   final movieSvc = MovieService(dio, apiKey: apiKey);
   final localStore = LocalStoreService();
