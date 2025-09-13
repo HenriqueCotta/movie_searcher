@@ -1,0 +1,260 @@
+lib
+├── data
+│   ├── models
+│   │   ├── >>> movie_dto.dart <<<
+│   │   └── >>> user_dto.dart <<<
+│   ├── repositories
+│   │   ├── >>> movies_repository.dart <<<
+│   │   └── >>> user_repository.dart <<<
+│   └── services
+│       ├── >>> dio_service.dart <<<
+│       ├── >>> local_store_service.dart <<<
+│       └── >>> movie_service.dart <<<
+├── >>> di.dart <<<
+├── domain
+│   ├── models
+│   │   └── >>> movie.dart <<<
+│   └── usecases (ignored)
+├── >>> main.dart <<<
+├── ui
+│   ├── core
+│   │   ├── theme
+│   │   │   ├── >>> app_theme.dart <<<
+│   │   │   ├── >>> palette.dart <<<
+│   │   │   └── >>> typography.dart <<<
+│   │   └── widgets (ignored)
+│   └── movies
+│       ├── view_models (ignored)
+│       ├── views
+│       │   ├── >>> detail_page.dart <<<
+│       │   ├── >>> recent_page.dart <<<
+│       │   └── >>> search_page.dart <<<
+│       └── widgets
+│           └── >>> movie_card.dart <<<
+└── utils (ignored)
+
+
+
+--- di.dart:START ---
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_searcher/data/repositories/movies_repository.dart';
+import 'package:movie_searcher/data/services/dio_service.dart';
+import 'package:movie_searcher/data/services/local_store_service.dart';
+import 'package:movie_searcher/data/services/movie_service.dart';
+import 'package:movie_searcher/ui/core/theme/app_theme.dart';
+import 'package:movie_searcher/ui/movies/view_models/detail_cubit.dart';
+import 'package:movie_searcher/ui/movies/view_models/recent_cubit.dart';
+import 'package:movie_searcher/ui/movies/view_models/search_cubit.dart';
+import 'package:movie_searcher/ui/movies/views/detail_page.dart';
+import 'package:movie_searcher/ui/movies/views/recent_page.dart';
+import 'package:movie_searcher/ui/movies/views/search_page.dart';
+
+Widget buildApp() {
+  const baseUrl = String.fromEnvironment('OMDB_BASE_URL', defaultValue: 'https://www.omdbapi.com/');
+  const apiKey = String.fromEnvironment('OMDB_API_KEY', defaultValue: 'SUA_CHAVE');
+
+  final dio = DioService(baseUrl);
+  final movieService = MovieService(dio, apiKey: apiKey);
+  final localStore = LocalStoreService();
+  final repo = MoviesRepository(movieService);
+
+  return MultiBlocProvider(
+    providers: [],
+    child: MaterialApp(
+      title: 'Movies',
+      debugShowCheckedModeBanner: false,
+      theme: buildAppTheme(),
+      initialRoute: '/',
+      routes: {
+        '/': (_) => const SearchPage(),
+        '/detail': (_) => const DetailPage(),
+        '/recent': (_) => const RecentPage(),
+      },
+    ),
+  );
+}
+
+--- di.dart:END ---
+
+--- main.dart:START ---
+import 'package:flutter/widgets.dart';
+import 'package:movie_searcher/di.dart';
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(buildApp());
+}
+
+--- main.dart:END ---
+
+--- data\models\movie_dto.dart:START ---
+class MovieDto {
+  final String title;
+  final String year;
+  final String imdbId;
+  final String poster;
+
+  MovieDto({required this.title, required this.year, required this.imdbId, required this.poster});
+
+  factory MovieDto.fromJson(Map<String, dynamic> j) => MovieDto(
+    title: (j['Title'] ?? '') as String,
+    year: (j['Year'] ?? '') as String,
+    imdbId: (j['imdbID'] ?? '') as String,
+    poster: (j['Poster'] ?? '') as String,
+  );
+}
+
+--- data\models\movie_dto.dart:END ---
+
+--- data\models\user_dto.dart:START ---
+
+--- data\models\user_dto.dart:END ---
+
+--- data\repositories\movies_repository.dart:START ---
+import 'package:movie_searcher/data/models/movie_dto.dart';
+import 'package:movie_searcher/data/services/movie_service.dart';
+import 'package:movie_searcher/domain/models/movie.dart';
+
+class MoviesRepository {
+  final MovieService service;
+  MoviesRepository(this.service);
+
+  Future<List<Movie>> search(String query) async {
+    final List<MovieDto> dtos = await service.fetchMovies(query);
+    return dtos.map((d) => Movie(id: d.imdbId, title: d.title, year: d.year, poster: d.poster)).toList();
+  }
+
+  Future<Movie> getById(String imdbId) async {
+    final d = await service.fetchMovieById(imdbId);
+    return Movie(id: d.imdbId, title: d.title, year: d.year, poster: d.poster);
+  }
+}
+
+--- data\repositories\movies_repository.dart:END ---
+
+--- data\repositories\user_repository.dart:START ---
+
+--- data\repositories\user_repository.dart:END ---
+
+--- data\services\dio_service.dart:START ---
+import 'package:dio/dio.dart';
+
+class DioService {
+  final Dio dio;
+  DioService(String baseUrl)
+    : dio = Dio(BaseOptions(baseUrl: baseUrl, connectTimeout: const Duration(seconds: 10), receiveTimeout: const Duration(seconds: 15)));
+}
+
+--- data\services\dio_service.dart:END ---
+
+--- data\services\local_store_service.dart:START ---
+import 'package:shared_preferences/shared_preferences.dart';
+
+class LocalStoreService {
+  static const _key = 'recent_movies'; // salva linhas: id|title|year|poster
+
+  Future<void> saveRecent(String row /* "id|title|year|poster" */) async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getStringList(_key) ?? [];
+    final dedup = [row, ...raw.where((e) => !e.startsWith('${row.split('|').first}|'))];
+    await prefs.setStringList(_key, dedup.take(5).toList());
+  }
+
+  Future<List<String>> getRecents() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList(_key) ?? [];
+  }
+}
+
+--- data\services\local_store_service.dart:END ---
+
+--- data\services\movie_service.dart:START ---
+import 'package:dio/dio.dart';
+import '../models/movie_dto.dart';
+import 'dio_service.dart';
+
+class MovieService {
+  final Dio _dio;
+  final String apiKey;
+  MovieService(DioService dioService, {required this.apiKey}) : _dio = dioService.dio;
+
+  Future<List<MovieDto>> fetchMovies(String query) async {
+    final res = await _dio.get('', queryParameters: {'apikey': apiKey, 's': query});
+    final list = (res.data['Search'] as List?) ?? [];
+    return list.map((e) => MovieDto.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  Future<MovieDto> fetchMovieById(String id) async {
+    final res = await _dio.get('', queryParameters: {'apikey': apiKey, 'i': id, 'plot': 'full'});
+    return MovieDto.fromJson(res.data as Map<String, dynamic>);
+  }
+}
+
+--- data\services\movie_service.dart:END ---
+
+--- domain\models\movie.dart:START ---
+class Movie {
+  final String id;
+  final String title;
+  final String year;
+  final String poster;
+  const Movie({required this.id, required this.title, required this.year, required this.poster});
+}
+
+--- domain\models\movie.dart:END ---
+
+--- ui\core\theme\app_theme.dart:START ---
+import 'package:flutter/material.dart';
+
+ThemeData buildAppTheme() => ThemeData(useMaterial3: true, colorSchemeSeed: Colors.teal);
+
+--- ui\core\theme\app_theme.dart:END ---
+
+--- ui\core\theme\palette.dart:START ---
+import 'package:flutter/material.dart';
+
+const primaryColor = Colors.teal;
+
+--- ui\core\theme\palette.dart:END ---
+
+--- ui\core\theme\typography.dart:START ---
+
+
+--- ui\core\theme\typography.dart:END ---
+
+--- ui\movies\views\detail_page.dart:START ---
+
+
+--- ui\movies\views\detail_page.dart:END ---
+
+--- ui\movies\views\recent_page.dart:START ---
+
+
+--- ui\movies\views\recent_page.dart:END ---
+
+--- ui\movies\views\search_page.dart:START ---
+
+
+--- ui\movies\views\search_page.dart:END ---
+
+--- ui\movies\widgets\movie_card.dart:START ---
+import 'package:flutter/material.dart';
+import 'package:movie_searcher/domain/models/movie.dart';
+
+class MovieCard extends StatelessWidget {
+  final Movie movie;
+  const MovieCard({super.key, required this.movie});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Image.network(movie.poster, width: 50, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.image_not_supported)),
+      title: Text(movie.title),
+      subtitle: Text(movie.year),
+      onTap: () => Navigator.pushNamed(context, '/detail', arguments: movie.id),
+    );
+  }
+}
+
+--- ui\movies\widgets\movie_card.dart:END ---

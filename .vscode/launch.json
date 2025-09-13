@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "movie_searcher",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "--dart-define=OMDB_BASE_URL=https://www.omdbapi.com/",
+                "--dart-define=OMDB_API_KEY=a4965158"
+            ]
+        },
+        {
+            "name": "movie_searcher (DEV mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "args": [
+                "--dart-define-from-file=env.dev.json"
+            ]
+        },
+        {
+            "name": "movie_searcher (PROD mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "args": [
+                "--dart-define-from-file=env.prod.json"
+            ]
+        }
+    ]
+}
