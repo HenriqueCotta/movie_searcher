@@ -1,4 +1,3 @@
-// data/repositories/movies_repository.dart
 import 'package:movie_searcher/data/models/movie_dto.dart';
 import 'package:movie_searcher/data/services/movie_service.dart';
 import 'package:movie_searcher/domain/models/movie.dart';

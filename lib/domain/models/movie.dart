@@ -1,4 +1,3 @@
-// domain/models/movie.dart
 class Movie {
   final String id;
   final String title;

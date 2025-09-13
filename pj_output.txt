@@ -24,7 +24,17 @@ lib
 │   │   │   └── >>> typography.dart <<<
 │   │   └── widgets (ignored)
 │   └── movies
-│       ├── view_models (ignored)
+│       ├── view_models
+│       │   ├── detail
+│       │   │   ├── >>> detail_cubit.dart <<<
+│       │   │   └── >>> detail_state.dart <<<
+│       │   ├── recent
+│       │   │   ├── >>> recent_cubit.dart <<<
+│       │   │   └── >>> recent_state.dart <<<
+│       │   └── search
+│       │       ├── >>> search_bloc.dart <<<
+│       │       ├── >>> search_event.dart <<<
+│       │       └── >>> search_state.dart <<<
 │       ├── views
 │       │   ├── >>> detail_page.dart <<<
 │       │   ├── >>> recent_page.dart <<<
@@ -36,6 +46,7 @@ lib
 
 
 --- di.dart:START ---
+// di.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/data/repositories/movies_repository.dart';
@@ -43,9 +54,9 @@ import 'package:movie_searcher/data/services/dio_service.dart';
 import 'package:movie_searcher/data/services/local_store_service.dart';
 import 'package:movie_searcher/data/services/movie_service.dart';
 import 'package:movie_searcher/ui/core/theme/app_theme.dart';
-import 'package:movie_searcher/ui/movies/view_models/detail_cubit.dart';
-import 'package:movie_searcher/ui/movies/view_models/recent_cubit.dart';
-import 'package:movie_searcher/ui/movies/view_models/search_cubit.dart';
+import 'package:movie_searcher/ui/movies/view_models/detail/detail_cubit.dart';
+import 'package:movie_searcher/ui/movies/view_models/recent/recent_cubit.dart';
+import 'package:movie_searcher/ui/movies/view_models/search/search_bloc.dart';
 import 'package:movie_searcher/ui/movies/views/detail_page.dart';
 import 'package:movie_searcher/ui/movies/views/recent_page.dart';
 import 'package:movie_searcher/ui/movies/views/search_page.dart';
@@ -55,21 +66,33 @@ Widget buildApp() {
   const apiKey = String.fromEnvironment('OMDB_API_KEY', defaultValue: 'SUA_CHAVE');
 
   final dio = DioService(baseUrl);
-  final movieService = MovieService(dio, apiKey: apiKey);
+  final movieSvc = MovieService(dio, apiKey: apiKey);
   final localStore = LocalStoreService();
-  final repo = MoviesRepository(movieService);
+  final moviesRepo = MoviesRepository(movieSvc);
 
-  return MultiBlocProvider(
-    providers: [],
+  return MultiRepositoryProvider(
+    providers: [
+      RepositoryProvider.value(value: moviesRepo),
+      RepositoryProvider.value(value: localStore),
+    ],
     child: MaterialApp(
       title: 'Movies',
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),
       initialRoute: '/',
       routes: {
-        '/': (_) => const SearchPage(),
-        '/detail': (_) => const DetailPage(),
-        '/recent': (_) => const RecentPage(),
+        '/': (ctx) => BlocProvider(
+          create: (_) => SearchBloc(ctx.read<MoviesRepository>()),
+          child: const SearchPage(),
+        ),
+        '/detail': (ctx) => BlocProvider(
+          create: (_) => DetailCubit(ctx.read<MoviesRepository>(), ctx.read<LocalStoreService>()),
+          child: const DetailPage(),
+        ),
+        '/recent': (ctx) => BlocProvider(
+          create: (_) => RecentCubit(ctx.read<LocalStoreService>())..load(),
+          child: const RecentPage(),
+        ),
       },
     ),
   );
@@ -89,20 +112,41 @@ void main() {
 --- main.dart:END ---
 
 --- data\models\movie_dto.dart:START ---
+// data/models/movie_dto.dart
 class MovieDto {
+  final String imdbId;
   final String title;
   final String year;
-  final String imdbId;
   final String poster;
+  final String genre;
+  final String plot;
 
-  MovieDto({required this.title, required this.year, required this.imdbId, required this.poster});
+  MovieDto({
+    required this.imdbId,
+    required this.title,
+    required this.year,
+    required this.poster,
+    required this.genre,
+    required this.plot,
+  });
 
   factory MovieDto.fromJson(Map<String, dynamic> j) => MovieDto(
+    imdbId: (j['imdbID'] ?? '') as String,
     title: (j['Title'] ?? '') as String,
     year: (j['Year'] ?? '') as String,
-    imdbId: (j['imdbID'] ?? '') as String,
     poster: (j['Poster'] ?? '') as String,
+    genre: (j['Genre'] ?? '') as String,
+    plot: (j['Plot'] ?? '') as String,
   );
+
+  Map<String, dynamic> toJson() => {
+    'title': title,
+    'year': year,
+    'imdbId': imdbId,
+    'poster': poster,
+    'genre': genre,
+    'plot': plot,
+  };
 }
 
 --- data\models\movie_dto.dart:END ---
@@ -112,6 +156,7 @@ class MovieDto {
 --- data\models\user_dto.dart:END ---
 
 --- data\repositories\movies_repository.dart:START ---
+// data/repositories/movies_repository.dart
 import 'package:movie_searcher/data/models/movie_dto.dart';
 import 'package:movie_searcher/data/services/movie_service.dart';
 import 'package:movie_searcher/domain/models/movie.dart';
@@ -122,12 +167,21 @@ class MoviesRepository {
 
   Future<List<Movie>> search(String query) async {
     final List<MovieDto> dtos = await service.fetchMovies(query);
-    return dtos.map((d) => Movie(id: d.imdbId, title: d.title, year: d.year, poster: d.poster)).toList();
+    return dtos
+        .map((d) => Movie(id: d.imdbId, title: d.title, year: d.year, poster: d.poster))
+        .toList();
   }
 
   Future<Movie> getById(String imdbId) async {
     final d = await service.fetchMovieById(imdbId);
-    return Movie(id: d.imdbId, title: d.title, year: d.year, poster: d.poster);
+    return Movie(
+      id: d.imdbId,
+      title: d.title,
+      year: d.year,
+      poster: d.poster,
+      genre: d.genre,
+      plot: d.plot,
+    );
   }
 }
 
@@ -180,7 +234,10 @@ class MovieService {
   MovieService(DioService dioService, {required this.apiKey}) : _dio = dioService.dio;
 
   Future<List<MovieDto>> fetchMovies(String query) async {
-    final res = await _dio.get('', queryParameters: {'apikey': apiKey, 's': query});
+    final res = await _dio.get(
+      '',
+      queryParameters: {'apikey': apiKey, 's': query, 'type': 'movie'},
+    );
     final list = (res.data['Search'] as List?) ?? [];
     return list.map((e) => MovieDto.fromJson(e as Map<String, dynamic>)).toList();
   }
@@ -194,12 +251,23 @@ class MovieService {
 --- data\services\movie_service.dart:END ---
 
 --- domain\models\movie.dart:START ---
+// domain/models/movie.dart
 class Movie {
   final String id;
   final String title;
   final String year;
   final String poster;
-  const Movie({required this.id, required this.title, required this.year, required this.poster});
+  final String genre;
+  final String plot;
+
+  const Movie({
+    required this.id,
+    required this.title,
+    required this.year,
+    required this.poster,
+    this.genre = '',
+    this.plot = '',
+  });
 }
 
 --- domain\models\movie.dart:END ---
@@ -224,19 +292,409 @@ const primaryColor = Colors.teal;
 --- ui\core\theme\typography.dart:END ---
 
 --- ui\movies\views\detail_page.dart:START ---
+// ui/movies/views/detail_page.dart
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_searcher/ui/movies/view_models/detail/detail_cubit.dart';
+import 'package:movie_searcher/ui/movies/view_models/detail/detail_state.dart';
 
+class DetailPage extends StatefulWidget {
+  const DetailPage({super.key});
+  @override
+  State<DetailPage> createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final id = ModalRoute.of(context)!.settings.arguments as String;
+    context.read<DetailCubit>().load(id);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Detalhes')),
+      body: BlocBuilder<DetailCubit, DetailState>(
+        builder: (_, state) {
+          if (state is DetailLoading) return const Center(child: CircularProgressIndicator());
+          if (state is DetailError) return Center(child: Text('Erro: ${state.message}'));
+          final m = (state as DetailLoaded).movie;
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Image.network(
+                    m.poster,
+                    height: 300,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => const Icon(Icons.image_not_supported, size: 120),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(m.title, style: Theme.of(context).textTheme.headlineSmall),
+                Text(m.year),
+                const SizedBox(height: 8),
+                Text(m.genre, style: Theme.of(context).textTheme.bodyMedium),
+                const SizedBox(height: 12),
+                Text(m.plot),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
 
 --- ui\movies\views\detail_page.dart:END ---
 
 --- ui\movies\views\recent_page.dart:START ---
+// ui/movies/views/recent_page.dart
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_searcher/ui/movies/view_models/recent/recent_cubit.dart';
+import 'package:movie_searcher/ui/movies/view_models/recent/recent_state.dart';
+import 'package:movie_searcher/ui/movies/widgets/movie_card.dart';
 
+class RecentPage extends StatefulWidget {
+  const RecentPage({super.key});
+  @override
+  State<RecentPage> createState() => _RecentPageState();
+}
+
+class _RecentPageState extends State<RecentPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() => context.read<RecentCubit>().load());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Recentes')),
+      body: BlocBuilder<RecentCubit, RecentState>(
+        builder: (_, state) {
+          if (state is RecentLoading) return const Center(child: CircularProgressIndicator());
+          if (state is RecentEmpty) return const Center(child: Text('Sem filmes recentes.'));
+          if (state is RecentError) return Center(child: Text('Erro: ${state.message}'));
+          final items = (state as RecentLoaded).items;
+          return ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (_, i) => MovieCard(movie: items[i]),
+          );
+        },
+      ),
+    );
+  }
+}
 
 --- ui\movies\views\recent_page.dart:END ---
 
 --- ui\movies\views\search_page.dart:START ---
+// ui/movies/views/search_page.dart
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_searcher/ui/movies/view_models/search/search_bloc.dart';
+import 'package:movie_searcher/ui/movies/view_models/search/search_event.dart';
+import 'package:movie_searcher/ui/movies/view_models/search/search_state.dart';
+import 'package:movie_searcher/ui/movies/widgets/movie_card.dart';
 
+class SearchPage extends StatefulWidget {
+  const SearchPage({super.key});
+  @override
+  State<SearchPage> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  final searchTxtCtrl = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = context.read<SearchBloc>();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Buscar filmes'),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.pushNamed(context, '/recent'),
+            icon: const Icon(Icons.history),
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: searchTxtCtrl,
+                    decoration: const InputDecoration(labelText: 'Digite o título'),
+                    onChanged: (t) => bloc.add(SearchTextChanged(t)),
+                    onSubmitted: (t) => bloc.add(SearchSubmitted(t)),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: () => bloc.add(SearchSubmitted(searchTxtCtrl.text)),
+                  child: const Text('Buscar'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: BlocBuilder<SearchBloc, SearchState>(
+                builder: (context, state) {
+                  switch (state) {
+                    case SearchLoading():
+                      return const Center(child: CircularProgressIndicator());
+                    case SearchEmpty():
+                      return const Center(child: Text('Nenhum resultado.'));
+                    case SearchError(:final message):
+                      return Center(child: Text('Erro: $message'));
+                    case SearchSuccess(:final results):
+                      return ListView.builder(
+                        itemCount: results.length,
+                        itemBuilder: (_, i) => MovieCard(movie: results[i]),
+                      );
+                    case SearchIdle():
+                      return const Center(child: Text('Busque um filme pelo título.'));
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 --- ui\movies\views\search_page.dart:END ---
+
+--- ui\movies\view_models\detail\detail_cubit.dart:START ---
+// ui/movies/view_models/detail/detail_cubit.dart
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_searcher/data/repositories/movies_repository.dart';
+import 'package:movie_searcher/data/services/local_store_service.dart';
+import 'detail_state.dart';
+
+class DetailCubit extends Cubit<DetailState> {
+  final MoviesRepository repo;
+  final LocalStoreService local;
+  DetailCubit(this.repo, this.local) : super(const DetailLoading());
+
+  Future<void> load(String id) async {
+    emit(const DetailLoading());
+    try {
+      final m = await repo.getById(id);
+      final row = '${m.id}|${m.title}|${m.year}|${m.poster}';
+      await local.saveRecent(row);
+      emit(DetailLoaded(m));
+    } catch (e) {
+      emit(DetailError(e.toString()));
+    }
+  }
+}
+
+--- ui\movies\view_models\detail\detail_cubit.dart:END ---
+
+--- ui\movies\view_models\detail\detail_state.dart:START ---
+// ui/movies/view_models/detail/detail_state.dart
+import 'package:movie_searcher/domain/models/movie.dart';
+
+sealed class DetailState {
+  const DetailState();
+}
+
+class DetailLoading extends DetailState {
+  const DetailLoading();
+}
+
+class DetailLoaded extends DetailState {
+  final Movie movie;
+  const DetailLoaded(this.movie);
+}
+
+class DetailError extends DetailState {
+  final String message;
+  const DetailError(this.message);
+}
+
+--- ui\movies\view_models\detail\detail_state.dart:END ---
+
+--- ui\movies\view_models\recent\recent_cubit.dart:START ---
+// ui/movies/view_models/recent/recent_cubit.dart
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_searcher/data/services/local_store_service.dart';
+import 'package:movie_searcher/domain/models/movie.dart';
+import 'recent_state.dart';
+
+class RecentCubit extends Cubit<RecentState> {
+  final LocalStoreService local;
+  RecentCubit(this.local) : super(const RecentLoading());
+
+  Future<void> load() async {
+    emit(const RecentLoading());
+    try {
+      final rows = await local.getRecents();
+      if (rows.isEmpty) {
+        emit(const RecentEmpty());
+        return;
+      }
+      final items = rows.map((r) {
+        final p = r.split('|'); // id|title|year|poster
+        return Movie(id: p[0], title: p[1], year: p[2], poster: p[3]);
+      }).toList();
+      emit(RecentLoaded(items));
+    } catch (e) {
+      emit(RecentError(e.toString()));
+    }
+  }
+
+  Future<void> clear() async {
+    await local.saveRecent(''); // opcional: você pode criar método dedicado limpar
+    await load();
+  }
+}
+
+--- ui\movies\view_models\recent\recent_cubit.dart:END ---
+
+--- ui\movies\view_models\recent\recent_state.dart:START ---
+// ui/movies/view_models/recent/recent_state.dart
+import 'package:movie_searcher/domain/models/movie.dart';
+
+sealed class RecentState {
+  const RecentState();
+}
+
+class RecentLoading extends RecentState {
+  const RecentLoading();
+}
+
+class RecentLoaded extends RecentState {
+  final List<Movie> items;
+  const RecentLoaded(this.items);
+}
+
+class RecentEmpty extends RecentState {
+  const RecentEmpty();
+}
+
+class RecentError extends RecentState {
+  final String message;
+  const RecentError(this.message);
+}
+
+--- ui\movies\view_models\recent\recent_state.dart:END ---
+
+--- ui\movies\view_models\search\search_bloc.dart:START ---
+// ui/movies/view_models/search/search_bloc.dart
+import 'dart:async';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_searcher/data/repositories/movies_repository.dart';
+import 'search_event.dart';
+import 'search_state.dart';
+
+class SearchBloc extends Bloc<SearchEvent, SearchState> {
+  final MoviesRepository moviesRepository;
+  Timer? _debounce;
+  SearchBloc(this.moviesRepository) : super(const SearchIdle()) {
+    on<SearchTextChanged>(_onChanged);
+    on<SearchSubmitted>(_onSubmitted);
+    on<SearchCleared>((_, emit) => emit(const SearchIdle()));
+  }
+
+  void _onChanged(SearchTextChanged event, Emitter<SearchState> _) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      add(SearchSubmitted(event.query));
+    });
+  }
+
+  Future<void> _onSubmitted(SearchSubmitted event, Emitter<SearchState> emit) async {
+    final q = event.query.trim();
+    if (q.isEmpty) {
+      emit(const SearchIdle());
+      return;
+    }
+    emit(const SearchLoading());
+    try {
+      final results = await moviesRepository.search(q);
+      if (results.isEmpty) {
+        emit(const SearchEmpty());
+      } else {
+        emit(SearchSuccess(results));
+      }
+    } catch (err) {
+      emit(SearchError(err.toString()));
+    }
+  }
+
+  @override
+  Future<void> close() {
+    _debounce?.cancel();
+    return super.close();
+  }
+}
+
+--- ui\movies\view_models\search\search_bloc.dart:END ---
+
+--- ui\movies\view_models\search\search_event.dart:START ---
+// ui/movies/view_models/search/search_event.dart
+abstract class SearchEvent {}
+
+class SearchTextChanged extends SearchEvent {
+  final String query;
+  SearchTextChanged(this.query);
+}
+
+class SearchSubmitted extends SearchEvent {
+  final String query;
+  SearchSubmitted(this.query);
+}
+
+class SearchCleared extends SearchEvent {}
+
+--- ui\movies\view_models\search\search_event.dart:END ---
+
+--- ui\movies\view_models\search\search_state.dart:START ---
+// ui/movies/view_models/search/search_state.dart
+import 'package:movie_searcher/domain/models/movie.dart';
+
+sealed class SearchState {
+  const SearchState();
+}
+
+class SearchIdle extends SearchState {
+  const SearchIdle();
+}
+
+class SearchLoading extends SearchState {
+  const SearchLoading();
+}
+
+class SearchSuccess extends SearchState {
+  final List<Movie> results;
+  const SearchSuccess(this.results);
+}
+
+class SearchEmpty extends SearchState {
+  const SearchEmpty();
+}
+
+class SearchError extends SearchState {
+  final String message;
+  const SearchError(this.message);
+}
+
+--- ui\movies\view_models\search\search_state.dart:END ---
 
 --- ui\movies\widgets\movie_card.dart:START ---
 import 'package:flutter/material.dart';
@@ -249,7 +707,12 @@ class MovieCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Image.network(movie.poster, width: 50, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.image_not_supported)),
+      leading: Image.network(
+        movie.poster,
+        width: 50,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => const Icon(Icons.image_not_supported),
+      ),
       title: Text(movie.title),
       subtitle: Text(movie.year),
       onTap: () => Navigator.pushNamed(context, '/detail', arguments: movie.id),

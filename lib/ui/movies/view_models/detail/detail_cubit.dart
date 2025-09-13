@@ -1,4 +1,3 @@
-// ui/movies/view_models/detail/detail_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/data/repositories/movies_repository.dart';
 import 'package:movie_searcher/data/services/local_store_service.dart';

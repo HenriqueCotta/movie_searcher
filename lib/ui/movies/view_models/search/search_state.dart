@@ -1,4 +1,3 @@
-// ui/movies/view_models/search/search_state.dart
 import 'package:movie_searcher/domain/models/movie.dart';
 
 sealed class SearchState {

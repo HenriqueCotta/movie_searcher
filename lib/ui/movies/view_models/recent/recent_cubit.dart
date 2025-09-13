@@ -1,4 +1,3 @@
-// ui/movies/view_models/recent/recent_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/data/services/local_store_service.dart';
 import 'package:movie_searcher/domain/models/movie.dart';
@@ -17,7 +16,7 @@ class RecentCubit extends Cubit<RecentState> {
         return;
       }
       final items = rows.map((r) {
-        final p = r.split('|'); // id|title|year|poster
+        final p = r.split('|');
         return Movie(id: p[0], title: p[1], year: p[2], poster: p[3]);
       }).toList();
       emit(RecentLoaded(items));
@@ -27,7 +26,7 @@ class RecentCubit extends Cubit<RecentState> {
   }
 
   Future<void> clear() async {
-    await local.saveRecent(''); // opcional: você pode criar método dedicado limpar
+    await local.saveRecent('');
     await load();
   }
 }

@@ -1,4 +1,3 @@
-// data/models/movie_dto.dart
 class MovieDto {
   final String imdbId;
   final String title;

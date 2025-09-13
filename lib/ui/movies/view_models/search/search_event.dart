@@ -1,4 +1,3 @@
-// ui/movies/view_models/search/search_event.dart
 abstract class SearchEvent {}
 
 class SearchTextChanged extends SearchEvent {

@@ -1,4 +1,3 @@
-// ui/movies/view_models/search/search_bloc.dart
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/data/repositories/movies_repository.dart';

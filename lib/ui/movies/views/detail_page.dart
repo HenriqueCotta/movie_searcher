@@ -1,4 +1,3 @@
-// ui/movies/views/detail_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/ui/movies/view_models/detail/detail_cubit.dart';

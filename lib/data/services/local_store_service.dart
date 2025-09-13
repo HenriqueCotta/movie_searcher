@@ -1,9 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStoreService {
-  static const _key = 'recent_movies'; // salva linhas: id|title|year|poster
-
-  Future<void> saveRecent(String row /* "id|title|year|poster" */) async {
+  static const _key = 'recent_movies';
+  Future<void> saveRecent(String row) async {
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getStringList(_key) ?? [];
     final dedup = [row, ...raw.where((e) => !e.startsWith('${row.split('|').first}|'))];
