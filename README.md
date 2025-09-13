@@ -66,19 +66,19 @@ Se tiver mais de um device, escolha com `-d <deviceId>` (ex.: `-d chrome`, `-d w
 ### Android (APK)
 
 ```bash
-flutter build apk --dart-define-from-file=env.prod.json
+flutter build apk --dart-define-from-file=env.dev.json
 ```
 
 ### Android (AppBundle)
 
 ```bash
-flutter build appbundle --dart-define-from-file=env.prod.json
+flutter build appbundle --dart-define-from-file=env.dev.json
 ```
 
 ### iOS (Archive)
 
 ```bash
-flutter build ipa --dart-define-from-file=env.prod.json
+flutter build ipa --dart-define-from-file=env.dev.json
 ```
 
 ## Testes e Qualidade
