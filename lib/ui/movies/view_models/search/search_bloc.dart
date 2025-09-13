@@ -13,14 +13,34 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchBloc(this.moviesRepository) : super(const SearchIdle()) {
     on<SearchTextChanged>(_onChanged);
     on<SearchSubmitted>(_onSubmitted);
-    on<SearchCleared>((_, emit) => emit(const SearchIdle()));
+    on<SearchCleared>(_onCleared);
   }
 
-  void _onChanged(SearchTextChanged event, Emitter<SearchState> _) {
+  void _emitWithQuery(Emitter<SearchState> emit, String q) {
+    final s = state;
+    switch (s) {
+      case SearchIdle():
+        emit(SearchIdle(q));
+      case SearchLoading():
+        emit(SearchLoading(q));
+      case SearchEmpty():
+        emit(SearchEmpty(q));
+      case SearchError(message: final m):
+        emit(SearchError(q, m));
+      case SearchSuccess(results: final r):
+        emit(SearchSuccess(q, r));
+    }
+  }
+
+  void _onChanged(SearchTextChanged event, Emitter<SearchState> emit) {
     if (_closing) return;
+    final q = event.query;
+
+    // atualiza o query no estado mantendo o tipo atual (UX: mantém resultados na tela)
+    _emitWithQuery(emit, q);
 
     _debounce?.cancel();
-    final q = event.query;
+    if (q.trim().isEmpty) return; // não dispara busca vazia
 
     _debounce = Timer(const Duration(milliseconds: 400), () {
       if (_closing || isClosed) return;
@@ -31,20 +51,25 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   Future<void> _onSubmitted(SearchSubmitted event, Emitter<SearchState> emit) async {
     final q = event.query.trim();
     if (q.isEmpty) {
-      emit(const SearchIdle());
+      emit(const SearchIdle(''));
       return;
     }
-    emit(const SearchLoading());
+    emit(SearchLoading(q));
     try {
       final results = await moviesRepository.search(q);
       if (results.isEmpty) {
-        emit(const SearchEmpty());
+        emit(SearchEmpty(q));
       } else {
-        emit(SearchSuccess(results));
+        emit(SearchSuccess(q, results));
       }
     } catch (err) {
-      emit(SearchError(err.toString()));
+      emit(SearchError(q, err.toString()));
     }
+  }
+
+  void _onCleared(SearchCleared event, Emitter<SearchState> emit) {
+    _debounce?.cancel();
+    emit(const SearchIdle(''));
   }
 
   @override

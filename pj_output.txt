@@ -1,97 +1,61 @@
-movie_searcher
-├── .dart_tool (ignored)
-├── .flutter-plugins-dependencies (ignored)
-├── .git (ignored)
-├── .gitignore (ignored)
-├── .idea (ignored)
-├── .metadata (ignored)
-├── .vscode (ignored)
-├── README.md (ignored)
-├── analysis_options.yaml (ignored)
-├── android (ignored)
-├── build (ignored)
-├── env.dev.json (ignored)
-├── env.example.json (ignored)
-├── ios (ignored)
-├── lib
-│   ├── data
-│   │   ├── models
-│   │   │   ├── >>> movie_dto.dart <<<
-│   │   │   └── >>> user_dto.dart <<<
-│   │   ├── repositories
-│   │   │   ├── >>> movies_repository.dart <<<
-│   │   │   └── >>> user_repository.dart <<<
-│   │   └── services
-│   │       ├── >>> dio_service.dart <<<
-│   │       ├── >>> local_store_service.dart <<<
-│   │       └── >>> movie_service.dart <<<
-│   ├── >>> di.dart <<<
-│   ├── domain
-│   │   ├── models
-│   │   │   └── >>> movie.dart <<<
-│   │   └── usecases (ignored)
-│   ├── >>> main.dart <<<
-│   ├── ui
-│   │   ├── core
-│   │   │   ├── theme
-│   │   │   │   ├── >>> app_theme.dart <<<
-│   │   │   │   ├── >>> palette.dart <<<
-│   │   │   │   └── >>> typography.dart <<<
-│   │   │   └── widgets (ignored)
-│   │   └── movies
-│   │       ├── view_models
-│   │       │   ├── detail
-│   │       │   │   ├── >>> detail_cubit.dart <<<
-│   │       │   │   └── >>> detail_state.dart <<<
-│   │       │   ├── recent
-│   │       │   │   ├── >>> recent_cubit.dart <<<
-│   │       │   │   └── >>> recent_state.dart <<<
-│   │       │   └── search
-│   │       │       ├── >>> search_bloc.dart <<<
-│   │       │       ├── >>> search_event.dart <<<
-│   │       │       └── >>> search_state.dart <<<
-│   │       ├── views
-│   │       │   ├── >>> detail_page.dart <<<
-│   │       │   ├── >>> recent_page.dart <<<
-│   │       │   └── >>> search_page.dart <<<
-│   │       └── widgets
-│   │           └── >>> movie_card.dart <<<
-│   └── utils (ignored)
-├── linux (ignored)
-├── macos (ignored)
-├── movie_searcher.iml (ignored)
-├── pj_output.txt (ignored)
-├── pubspec.lock (ignored)
-├── pubspec.yaml (ignored)
-├── test
-│   ├── integration (ignored)
-│   ├── unit
-│   │   ├── data
-│   │   │   ├── models
-│   │   │   │   └── >>> movie_dto_test.dart <<<
-│   │   │   ├── repositories
-│   │   │   │   └── >>> movie_repository_test.dart <<<
-│   │   │   └── services
-│   │   │       ├── >>> dio_service_test.dart <<<
-│   │   │       ├── >>> local_store_service_test.dart <<<
-│   │   │       └── >>> movie_service_test.dart <<<
-│   │   ├── domain
-│   │   │   └── models
-│   │   │       └── >>> movie_test.dart <<<
-│   │   ├── ui
-│   │   │   └── view_models
-│   │   │       ├── >>> detail_cubit_test.dart <<<
-│   │   │       ├── >>> recent_cubit_test.dart <<<
-│   │   │       └── >>> search_bloc_test.dart <<<
-│   │   └── utils
-│   │       └── >>> mocks.dart <<<
-│   └── widget (ignored)
-├── web (ignored)
-└── windows (ignored)
+lib
+├── data
+│   ├── models
+│   │   ├── >>> movie_dto.dart <<<
+│   │   └── >>> user_dto.dart <<<
+│   ├── repositories
+│   │   ├── >>> movies_repository.dart <<<
+│   │   └── >>> user_repository.dart <<<
+│   └── services
+│       ├── >>> dio_service.dart <<<
+│       ├── >>> local_store_service.dart <<<
+│       └── >>> movie_service.dart <<<
+├── >>> di.dart <<<
+├── domain
+│   ├── models
+│   │   └── >>> movie.dart <<<
+│   └── usecases (ignored)
+├── >>> main.dart <<<
+├── ui
+│   ├── core
+│   │   ├── layout
+│   │   │   └── >>> breakpoints_rules.dart <<<
+│   │   ├── theme
+│   │   │   ├── >>> app_theme.dart <<<
+│   │   │   ├── >>> palette.dart <<<
+│   │   │   ├── >>> theme_cubit.dart <<<
+│   │   │   └── >>> typography.dart <<<
+│   │   └── widgets
+│   │       └── >>> theme_toggle_action.dart <<<
+│   └── movies
+│       ├── view_models
+│       │   ├── detail
+│       │   │   ├── >>> detail_cubit.dart <<<
+│       │   │   └── >>> detail_state.dart <<<
+│       │   ├── recent
+│       │   │   ├── >>> recent_cubit.dart <<<
+│       │   │   └── >>> recent_state.dart <<<
+│       │   └── search
+│       │       ├── >>> search_bloc.dart <<<
+│       │       ├── >>> search_event.dart <<<
+│       │       └── >>> search_state.dart <<<
+│       ├── views
+│       │   ├── >>> detail_page.dart <<<
+│       │   ├── >>> recent_page.dart <<<
+│       │   └── >>> search_page.dart <<<
+│       └── widgets
+│           ├── >>> movie_card.dart <<<
+│           ├── >>> movie_grid_title.dart <<<
+│           └── search_page
+│               ├── >>> result_sliver.dart <<<
+│               ├── search_bar
+│               │   └── >>> search_bar_area.dart <<<
+│               └── >>> states_sliver.dart <<<
+└── utils (ignored)
 
 
 
---- lib\di.dart:START ---
+--- di.dart:START ---
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/data/repositories/movies_repository.dart';
@@ -99,6 +63,7 @@ import 'package:movie_searcher/data/services/dio_service.dart';
 import 'package:movie_searcher/data/services/local_store_service.dart';
 import 'package:movie_searcher/data/services/movie_service.dart';
 import 'package:movie_searcher/ui/core/theme/app_theme.dart';
+import 'package:movie_searcher/ui/core/theme/theme_cubit.dart';
 import 'package:movie_searcher/ui/movies/view_models/detail/detail_cubit.dart';
 import 'package:movie_searcher/ui/movies/view_models/recent/recent_cubit.dart';
 import 'package:movie_searcher/ui/movies/view_models/search/search_bloc.dart';
@@ -120,32 +85,43 @@ Widget buildApp() {
       RepositoryProvider.value(value: moviesRepo),
       RepositoryProvider.value(value: localStore),
     ],
-    child: MaterialApp(
-      title: 'Movies',
-      debugShowCheckedModeBanner: false,
-      theme: buildAppTheme(),
-      initialRoute: '/',
-      routes: {
-        '/': (ctx) => BlocProvider(
-          create: (_) => SearchBloc(ctx.read<MoviesRepository>()),
-          child: const SearchPage(),
-        ),
-        '/detail': (ctx) => BlocProvider(
-          create: (_) => DetailCubit(ctx.read<MoviesRepository>(), ctx.read<LocalStoreService>()),
-          child: const DetailPage(),
-        ),
-        '/recent': (ctx) => BlocProvider(
-          create: (_) => RecentCubit(ctx.read<LocalStoreService>())..load(),
-          child: const RecentPage(),
-        ),
-      },
+    child: BlocProvider(
+      create: (_) => ThemeCubit()..load(),
+      child: Builder(
+        builder: (context) {
+          final mode = context.watch<ThemeCubit>().state;
+          return MaterialApp(
+            title: 'Movies',
+            debugShowCheckedModeBanner: false,
+            theme: buildLightTheme(),
+            darkTheme: buildDarkTheme(),
+            themeMode: mode,
+            initialRoute: '/',
+            routes: {
+              '/': (ctx) => BlocProvider(
+                create: (_) => SearchBloc(ctx.read<MoviesRepository>()),
+                child: const SearchPage(),
+              ),
+              '/detail': (ctx) => BlocProvider(
+                create: (_) =>
+                    DetailCubit(ctx.read<MoviesRepository>(), ctx.read<LocalStoreService>()),
+                child: const DetailPage(),
+              ),
+              '/recent': (ctx) => BlocProvider(
+                create: (_) => RecentCubit(ctx.read<LocalStoreService>())..load(),
+                child: const RecentPage(),
+              ),
+            },
+          );
+        },
+      ),
     ),
   );
 }
 
---- lib\di.dart:END ---
+--- di.dart:END ---
 
---- lib\main.dart:START ---
+--- main.dart:START ---
 import 'package:flutter/widgets.dart';
 import 'package:movie_searcher/di.dart';
 
@@ -154,9 +130,9 @@ void main() {
   runApp(buildApp());
 }
 
---- lib\main.dart:END ---
+--- main.dart:END ---
 
---- lib\data\models\movie_dto.dart:START ---
+--- data\models\movie_dto.dart:START ---
 class MovieDto {
   final String imdbId;
   final String title;
@@ -193,13 +169,13 @@ class MovieDto {
   };
 }
 
---- lib\data\models\movie_dto.dart:END ---
+--- data\models\movie_dto.dart:END ---
 
---- lib\data\models\user_dto.dart:START ---
+--- data\models\user_dto.dart:START ---
 
---- lib\data\models\user_dto.dart:END ---
+--- data\models\user_dto.dart:END ---
 
---- lib\data\repositories\movies_repository.dart:START ---
+--- data\repositories\movies_repository.dart:START ---
 import 'package:movie_searcher/data/models/movie_dto.dart';
 import 'package:movie_searcher/data/services/movie_service.dart';
 import 'package:movie_searcher/domain/models/movie.dart';
@@ -228,13 +204,13 @@ class MoviesRepository {
   }
 }
 
---- lib\data\repositories\movies_repository.dart:END ---
+--- data\repositories\movies_repository.dart:END ---
 
---- lib\data\repositories\user_repository.dart:START ---
+--- data\repositories\user_repository.dart:START ---
 
---- lib\data\repositories\user_repository.dart:END ---
+--- data\repositories\user_repository.dart:END ---
 
---- lib\data\services\dio_service.dart:START ---
+--- data\services\dio_service.dart:START ---
 import 'package:dio/dio.dart';
 
 class DioService {
@@ -243,9 +219,9 @@ class DioService {
     : dio = Dio(BaseOptions(baseUrl: baseUrl, connectTimeout: const Duration(seconds: 10), receiveTimeout: const Duration(seconds: 15)));
 }
 
---- lib\data\services\dio_service.dart:END ---
+--- data\services\dio_service.dart:END ---
 
---- lib\data\services\local_store_service.dart:START ---
+--- data\services\local_store_service.dart:START ---
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStoreService {
@@ -271,9 +247,9 @@ class LocalStoreService {
   }
 }
 
---- lib\data\services\local_store_service.dart:END ---
+--- data\services\local_store_service.dart:END ---
 
---- lib\data\services\movie_service.dart:START ---
+--- data\services\movie_service.dart:START ---
 import 'package:dio/dio.dart';
 import '../models/movie_dto.dart';
 import 'dio_service.dart';
@@ -298,9 +274,9 @@ class MovieService {
   }
 }
 
---- lib\data\services\movie_service.dart:END ---
+--- data\services\movie_service.dart:END ---
 
---- lib\domain\models\movie.dart:START ---
+--- domain\models\movie.dart:START ---
 class Movie {
   final String id;
   final String title;
@@ -319,28 +295,241 @@ class Movie {
   });
 }
 
---- lib\domain\models\movie.dart:END ---
+--- domain\models\movie.dart:END ---
 
---- lib\ui\core\theme\app_theme.dart:START ---
+--- ui\core\layout\breakpoints_rules.dart:START ---
+import 'package:flutter/widgets.dart';
+
+enum Breakpoint { xs, sm, md, lg, xl }
+
+Breakpoint breakpointForWidth(double w) {
+  if (w < 450) return Breakpoint.xs;
+  if (w < 740) return Breakpoint.sm;
+  if (w < 1200) return Breakpoint.md;
+  if (w < 1600) return Breakpoint.lg;
+  return Breakpoint.xl;
+}
+
+extension BreakpointX on BuildContext {
+  Breakpoint get layoutBreakPoint => breakpointForWidth(MediaQuery.sizeOf(this).width);
+}
+
+int movieGridColumns(Breakpoint bp) {
+  switch (bp) {
+    case Breakpoint.xs:
+      return 1;
+    case Breakpoint.sm:
+      return 2;
+    case Breakpoint.md:
+      return 3;
+    case Breakpoint.lg:
+      return 4;
+    case Breakpoint.xl:
+      return 6;
+  }
+}
+
+--- ui\core\layout\breakpoints_rules.dart:END ---
+
+--- ui\core\theme\app_theme.dart:START ---
+import 'package:flutter/material.dart';
+import 'package:movie_searcher/ui/core/theme/palette.dart';
+import 'package:movie_searcher/ui/core/theme/typography.dart';
+
+ThemeData buildLightTheme() {
+  final base = ThemeData(
+    useMaterial3: true,
+    colorSchemeSeed: seedColor,
+    brightness: Brightness.light,
+    visualDensity: VisualDensity.adaptivePlatformDensity,
+  );
+
+  return base.copyWith(
+    textTheme: buildTextTheme(base.textTheme),
+    scaffoldBackgroundColor: base.colorScheme.surface,
+    appBarTheme: AppBarTheme(
+      centerTitle: false,
+      elevation: 0,
+      backgroundColor: base.colorScheme.surface,
+      foregroundColor: base.colorScheme.onSurface,
+    ),
+    cardTheme: CardThemeData(
+      elevation: 1,
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      clipBehavior: Clip.antiAlias,
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      // Se der erro com surfaceContainerHighest, troque por surfaceVariant
+      fillColor: base.colorScheme.surfaceContainerHighest,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: base.colorScheme.outlineVariant),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: base.colorScheme.primary),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      labelStyle: TextStyle(color: base.colorScheme.onSurfaceVariant),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size(48, 48),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    ),
+    filledButtonTheme: FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        minimumSize: const Size(48, 48),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    ),
+    navigationBarTheme: NavigationBarThemeData(
+      indicatorColor: base.colorScheme.secondaryContainer,
+      backgroundColor: base.colorScheme.surface,
+      elevation: 1,
+    ),
+    dividerTheme: DividerThemeData(color: base.colorScheme.outlineVariant),
+  );
+}
+
+ThemeData buildDarkTheme() {
+  final base = ThemeData(
+    useMaterial3: true,
+    colorSchemeSeed: seedColor,
+    brightness: Brightness.dark,
+    visualDensity: VisualDensity.adaptivePlatformDensity,
+  );
+
+  return base.copyWith(
+    textTheme: buildTextTheme(base.textTheme),
+    cardTheme: CardThemeData(
+      elevation: 1,
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      clipBehavior: Clip.antiAlias,
+      // Se der erro com surfaceContainer, troque por surfaceVariant
+      color: base.colorScheme.surfaceContainer,
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: base.colorScheme.surfaceContainerHighest,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: base.colorScheme.outlineVariant),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: base.colorScheme.primary),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      labelStyle: TextStyle(color: base.colorScheme.onSurfaceVariant),
+    ),
+  );
+}
+
+--- ui\core\theme\app_theme.dart:END ---
+
+--- ui\core\theme\palette.dart:START ---
 import 'package:flutter/material.dart';
 
-ThemeData buildAppTheme() => ThemeData(useMaterial3: true, colorSchemeSeed: Colors.teal);
+const seedColor = Colors.teal; // cor base (M3)
 
---- lib\ui\core\theme\app_theme.dart:END ---
+--- ui\core\theme\palette.dart:END ---
 
---- lib\ui\core\theme\palette.dart:START ---
+--- ui\core\theme\theme_cubit.dart:START ---
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class ThemeCubit extends Cubit<ThemeMode> {
+  static const _key = 'theme_mode';
+  ThemeCubit() : super(ThemeMode.system);
+
+  Future<void> load() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString(_key) ?? 'system';
+    switch (raw) {
+      case 'light':
+        emit(ThemeMode.light);
+        break;
+      case 'dark':
+        emit(ThemeMode.dark);
+        break;
+      default:
+        emit(ThemeMode.system);
+    }
+  }
+
+  Future<void> toggle() async {
+    final next = switch (state) {
+      ThemeMode.light => ThemeMode.dark,
+      ThemeMode.dark => ThemeMode.system,
+      ThemeMode.system => ThemeMode.light,
+    };
+    emit(next);
+    final prefs = await SharedPreferences.getInstance();
+    final s = switch (next) {
+      ThemeMode.light => 'light',
+      ThemeMode.dark => 'dark',
+      ThemeMode.system => 'system',
+    };
+    await prefs.setString(_key, s);
+  }
+}
+
+--- ui\core\theme\theme_cubit.dart:END ---
+
+--- ui\core\theme\typography.dart:START ---
 import 'package:flutter/material.dart';
 
-const primaryColor = Colors.teal;
+TextTheme buildTextTheme(TextTheme base) => base.copyWith(
+  headlineSmall: base.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
+  titleLarge: base.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+  bodyLarge: base.bodyLarge?.copyWith(height: 1.3),
+  bodyMedium: base.bodyMedium?.copyWith(height: 1.3),
+);
 
---- lib\ui\core\theme\palette.dart:END ---
+--- ui\core\theme\typography.dart:END ---
 
---- lib\ui\core\theme\typography.dart:START ---
+--- ui\core\widgets\theme_toggle_action.dart:START ---
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_searcher/ui/core/theme/theme_cubit.dart';
 
+class ThemeToggleAction extends StatelessWidget {
+  const ThemeToggleAction({super.key});
 
---- lib\ui\core\theme\typography.dart:END ---
+  @override
+  Widget build(BuildContext context) {
+    final mode = context.watch<ThemeCubit>().state;
+    final icon = switch (mode) {
+      ThemeMode.light => Icons.light_mode,
+      ThemeMode.dark => Icons.dark_mode,
+      ThemeMode.system => Icons.brightness_auto,
+    };
+    final tooltip =
+        'Tema: ${switch (mode) {
+          ThemeMode.light => 'Claro',
+          ThemeMode.dark => 'Escuro',
+          ThemeMode.system => 'Automático',
+        }} (toque p/ alternar)';
 
---- lib\ui\movies\views\detail_page.dart:START ---
+    return IconButton(
+      tooltip: tooltip,
+      icon: Icon(icon),
+      onPressed: () => context.read<ThemeCubit>().toggle(),
+    );
+  }
+}
+
+--- ui\core\widgets\theme_toggle_action.dart:END ---
+
+--- ui\movies\views\detail_page.dart:START ---
+// ui/movies/views/detail_page.dart
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/ui/movies/view_models/detail/detail_cubit.dart';
@@ -366,31 +555,55 @@ class _DetailPageState extends State<DetailPage> {
       appBar: AppBar(title: const Text('Detalhes')),
       body: BlocBuilder<DetailCubit, DetailState>(
         builder: (_, state) {
-          if (state is DetailLoading) return const Center(child: CircularProgressIndicator());
-          if (state is DetailError) return Center(child: Text('Erro: ${state.message}'));
+          if (state is DetailLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state is DetailError) {
+            return Center(child: Text('Erro: ${state.message}'));
+          }
+
           final m = (state as DetailLoaded).movie;
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Image.network(
-                    m.poster,
-                    height: 300,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => const Icon(Icons.image_not_supported, size: 120),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(m.title, style: Theme.of(context).textTheme.headlineSmall),
-                Text(m.year),
-                const SizedBox(height: 8),
-                Text(m.genre, style: Theme.of(context).textTheme.bodyMedium),
-                const SizedBox(height: 12),
-                Text(m.plot),
-              ],
-            ),
+
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final isCompact = constraints.maxWidth < 720;
+              // Mantém o poster pequeno para não evidenciar pixelização
+              final posterWidth = isCompact
+                  ? math.min(constraints.maxWidth * 0.30, 120.0)
+                  : 180.0; // no máx 180 em telas maiores
+
+              final info = _MovieInfo(title: m.title, year: m.year, genre: m.genre, plot: m.plot);
+
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: isCompact
+                    // Mobile: poster pequeno à esquerda, infos à direita; plot abaixo
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _Poster(url: m.poster, width: posterWidth),
+                              const SizedBox(width: 16),
+                              Expanded(child: info.headerOnly()),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          info.plotOnly(),
+                        ],
+                      )
+                    // Wide: duas colunas, poster fixo à esquerda e tudo à direita
+                    : Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _Poster(url: m.poster, width: posterWidth),
+                          const SizedBox(width: 24),
+                          Expanded(child: info.full()),
+                        ],
+                      ),
+              );
+            },
           );
         },
       ),
@@ -398,14 +611,140 @@ class _DetailPageState extends State<DetailPage> {
   }
 }
 
---- lib\ui\movies\views\detail_page.dart:END ---
+/// Pôster pequeno, 2:3, com bordas e `cacheWidth` para evitar upscale
+/// Pôster pequeno, tamanho fixo (2:3), bordas e cacheWidth
+class _Poster extends StatelessWidget {
+  final String url;
+  final double width;
+  const _Poster({required this.url, required this.width});
 
---- lib\ui\movies\views\recent_page.dart:START ---
+  @override
+  Widget build(BuildContext context) {
+    final dpr = MediaQuery.of(context).devicePixelRatio;
+    final cacheWidth = (width * dpr).round();
+    final height = width * 1.5; // 2:3 -> altura = largura * 1.5
+
+    return SizedBox(
+      width: width,
+      height: height,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Image.network(
+          url,
+          fit: BoxFit.cover,
+          cacheWidth: cacheWidth,
+          filterQuality: FilterQuality.medium,
+          errorBuilder: (_, __, ___) => Container(
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            alignment: Alignment.center,
+            child: const Icon(Icons.image_not_supported, size: 48),
+          ),
+          loadingBuilder: (context, child, progress) {
+            if (progress == null) return child;
+            return Center(
+              child: CircularProgressIndicator(
+                value: (progress.expectedTotalBytes != null)
+                    ? progress.cumulativeBytesLoaded / progress.expectedTotalBytes!
+                    : null,
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+/// Bloco com título/ano/gênero/plot em pedaços reutilizáveis (mobile e wide)
+class _MovieInfo {
+  final String title;
+  final String year;
+  final String genre;
+  final String plot;
+  _MovieInfo({required this.title, required this.year, required this.genre, required this.plot});
+
+  Widget headerOnly() => Builder(
+    builder: (context) => Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: Theme.of(context).textTheme.headlineSmall),
+        const SizedBox(height: 4),
+        Text(year, style: Theme.of(context).textTheme.bodyMedium),
+        const SizedBox(height: 8),
+        _GenreChips(genre: genre),
+      ],
+    ),
+  );
+
+  Widget plotOnly() => Builder(
+    builder: (context) => Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Text(
+          plot.isEmpty ? 'Sem sinopse disponível.' : plot,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      ),
+    ),
+  );
+
+  Widget full() => Builder(
+    builder: (context) => Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: Theme.of(context).textTheme.headlineSmall),
+        const SizedBox(height: 4),
+        Text(year, style: Theme.of(context).textTheme.bodyMedium),
+        const SizedBox(height: 8),
+        _GenreChips(genre: genre),
+        const SizedBox(height: 16),
+        plotOnly(),
+      ],
+    ),
+  );
+}
+
+/// Converte "Action, Sci-Fi" em chips
+class _GenreChips extends StatelessWidget {
+  final String genre;
+  const _GenreChips({required this.genre});
+
+  @override
+  Widget build(BuildContext context) {
+    final parts = genre.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+    if (parts.isEmpty) return const SizedBox.shrink();
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        for (final g in parts)
+          Chip(
+            label: Text(g),
+            visualDensity: VisualDensity.compact,
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+      ],
+    );
+  }
+}
+
+--- ui\movies\views\detail_page.dart:END ---
+
+--- ui\movies\views\recent_page.dart:START ---
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_searcher/ui/core/widgets/theme_toggle_action.dart';
 import 'package:movie_searcher/ui/movies/view_models/recent/recent_cubit.dart';
 import 'package:movie_searcher/ui/movies/view_models/recent/recent_state.dart';
 import 'package:movie_searcher/ui/movies/widgets/movie_card.dart';
+import 'package:movie_searcher/ui/movies/widgets/movie_grid_title.dart';
+
+int _cols(double w) {
+  if (w >= 1200) return 6;
+  if (w >= 840) return 4;
+  if (w >= 600) return 2;
+  return 1;
+}
 
 class RecentPage extends StatefulWidget {
   const RecentPage({super.key});
@@ -422,33 +761,85 @@ class _RecentPageState extends State<RecentPage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final cols = _cols(size.width);
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Recentes')),
-      body: BlocBuilder<RecentCubit, RecentState>(
-        builder: (_, state) {
-          if (state is RecentLoading) return const Center(child: CircularProgressIndicator());
-          if (state is RecentEmpty) return const Center(child: Text('Sem filmes recentes.'));
-          if (state is RecentError) return Center(child: Text('Erro: ${state.message}'));
-          final items = (state as RecentLoaded).items;
-          return ListView.builder(
-            itemCount: items.length,
-            itemBuilder: (_, i) => MovieCard(movie: items[i]),
-          );
-        },
+      appBar: AppBar(title: const Text('Recentes'), actions: const [ThemeToggleAction()]),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+        child: BlocBuilder<RecentCubit, RecentState>(
+          builder: (_, state) {
+            if (state is RecentLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state is RecentEmpty) {
+              return const _Empty();
+            }
+            if (state is RecentError) {
+              return Center(child: Text('Erro: ${state.message}'));
+            }
+            final items = (state as RecentLoaded).items;
+
+            if (cols == 1) {
+              return ListView.builder(
+                itemCount: items.length,
+                itemBuilder: (_, i) => MovieCard(movie: items[i]),
+              );
+            }
+            return GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: cols,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                childAspectRatio: 2 / 3 + 0.15,
+              ),
+              itemCount: items.length,
+              itemBuilder: (_, i) => MovieGridTile(movie: items[i]),
+            );
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => context.read<RecentCubit>().clear(),
+        icon: const Icon(Icons.delete_sweep_outlined),
+        label: const Text('Limpar'),
       ),
     );
   }
 }
 
---- lib\ui\movies\views\recent_page.dart:END ---
+class _Empty extends StatelessWidget {
+  const _Empty();
 
---- lib\ui\movies\views\search_page.dart:START ---
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.history, size: 56, color: cs.outline),
+          const SizedBox(height: 12),
+          const Text('Sem filmes recentes.'),
+        ],
+      ),
+    );
+  }
+}
+
+--- ui\movies\views\recent_page.dart:END ---
+
+--- ui\movies\views\search_page.dart:START ---
+// ui/movies/views/search_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_searcher/ui/core/layout/breakpoints_rules.dart';
+import 'package:movie_searcher/ui/core/widgets/theme_toggle_action.dart';
 import 'package:movie_searcher/ui/movies/view_models/search/search_bloc.dart';
 import 'package:movie_searcher/ui/movies/view_models/search/search_event.dart';
-import 'package:movie_searcher/ui/movies/view_models/search/search_state.dart';
-import 'package:movie_searcher/ui/movies/widgets/movie_card.dart';
+import 'package:movie_searcher/ui/movies/widgets/search_page/result_sliver.dart';
+import 'package:movie_searcher/ui/movies/widgets/search_page/search_bar/search_bar_area.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -462,69 +853,40 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<SearchBloc>();
+    final cols = movieGridColumns(context.layoutBreakPoint);
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Buscar filmes'),
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.pushNamed(context, '/recent'),
-            icon: const Icon(Icons.history),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: searchTxtCtrl,
-                    decoration: const InputDecoration(labelText: 'Digite o título'),
-                    onChanged: (t) => bloc.add(SearchTextChanged(t)),
-                    onSubmitted: (t) => bloc.add(SearchSubmitted(t)),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: () => bloc.add(SearchSubmitted(searchTxtCtrl.text)),
-                  child: const Text('Buscar'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: BlocBuilder<SearchBloc, SearchState>(
-                builder: (context, state) {
-                  switch (state) {
-                    case SearchLoading():
-                      return const Center(child: CircularProgressIndicator());
-                    case SearchEmpty():
-                      return const Center(child: Text('Nenhum resultado.'));
-                    case SearchError(:final message):
-                      return Center(child: Text('Erro: $message'));
-                    case SearchSuccess(:final results):
-                      return ListView.builder(
-                        itemCount: results.length,
-                        itemBuilder: (_, i) => MovieCard(movie: results[i]),
-                      );
-                    case SearchIdle():
-                      return const Center(child: Text('Busque um filme pelo título.'));
-                  }
-                },
+      appBar: AppBar(title: const Text('Movie Searcher'), actions: const [ThemeToggleAction()]),
+      body: CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            sliver: SliverToBoxAdapter(
+              child: SearchBarArea(
+                controller: searchTxtCtrl,
+                onChanged: (t) => bloc.add(SearchTextChanged(t)),
+                onSubmit: () => bloc.add(SearchSubmitted(searchTxtCtrl.text)),
+                onRecentTap: () => Navigator.pushNamed(context, '/recent'),
               ),
             ),
-          ],
-        ),
+          ),
+          const SliverPadding(
+            padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
+            sliver: SizedBox.shrink(),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            sliver: ResultsSliver(columns: cols),
+          ),
+        ],
       ),
     );
   }
 }
 
---- lib\ui\movies\views\search_page.dart:END ---
+--- ui\movies\views\search_page.dart:END ---
 
---- lib\ui\movies\view_models\detail\detail_cubit.dart:START ---
+--- ui\movies\view_models\detail\detail_cubit.dart:START ---
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/data/repositories/movies_repository.dart';
 import 'package:movie_searcher/data/services/local_store_service.dart';
@@ -548,9 +910,9 @@ class DetailCubit extends Cubit<DetailState> {
   }
 }
 
---- lib\ui\movies\view_models\detail\detail_cubit.dart:END ---
+--- ui\movies\view_models\detail\detail_cubit.dart:END ---
 
---- lib\ui\movies\view_models\detail\detail_state.dart:START ---
+--- ui\movies\view_models\detail\detail_state.dart:START ---
 import 'package:movie_searcher/domain/models/movie.dart';
 
 sealed class DetailState {
@@ -571,9 +933,9 @@ class DetailError extends DetailState {
   const DetailError(this.message);
 }
 
---- lib\ui\movies\view_models\detail\detail_state.dart:END ---
+--- ui\movies\view_models\detail\detail_state.dart:END ---
 
---- lib\ui\movies\view_models\recent\recent_cubit.dart:START ---
+--- ui\movies\view_models\recent\recent_cubit.dart:START ---
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/data/services/local_store_service.dart';
 import 'package:movie_searcher/domain/models/movie.dart';
@@ -612,9 +974,9 @@ class RecentCubit extends Cubit<RecentState> {
   }
 }
 
---- lib\ui\movies\view_models\recent\recent_cubit.dart:END ---
+--- ui\movies\view_models\recent\recent_cubit.dart:END ---
 
---- lib\ui\movies\view_models\recent\recent_state.dart:START ---
+--- ui\movies\view_models\recent\recent_state.dart:START ---
 import 'package:movie_searcher/domain/models/movie.dart';
 
 sealed class RecentState {
@@ -639,9 +1001,9 @@ class RecentError extends RecentState {
   const RecentError(this.message);
 }
 
---- lib\ui\movies\view_models\recent\recent_state.dart:END ---
+--- ui\movies\view_models\recent\recent_state.dart:END ---
 
---- lib\ui\movies\view_models\search\search_bloc.dart:START ---
+--- ui\movies\view_models\search\search_bloc.dart:START ---
 // ui/movies/view_models/search/search_bloc.dart
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -700,9 +1062,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 }
 
---- lib\ui\movies\view_models\search\search_bloc.dart:END ---
+--- ui\movies\view_models\search\search_bloc.dart:END ---
 
---- lib\ui\movies\view_models\search\search_event.dart:START ---
+--- ui\movies\view_models\search\search_event.dart:START ---
 abstract class SearchEvent {}
 
 class SearchTextChanged extends SearchEvent {
@@ -717,9 +1079,9 @@ class SearchSubmitted extends SearchEvent {
 
 class SearchCleared extends SearchEvent {}
 
---- lib\ui\movies\view_models\search\search_event.dart:END ---
+--- ui\movies\view_models\search\search_event.dart:END ---
 
---- lib\ui\movies\view_models\search\search_state.dart:START ---
+--- ui\movies\view_models\search\search_state.dart:START ---
 import 'package:movie_searcher/domain/models/movie.dart';
 
 sealed class SearchState {
@@ -748,9 +1110,9 @@ class SearchError extends SearchState {
   const SearchError(this.message);
 }
 
---- lib\ui\movies\view_models\search\search_state.dart:END ---
+--- ui\movies\view_models\search\search_state.dart:END ---
 
---- lib\ui\movies\widgets\movie_card.dart:START ---
+--- ui\movies\widgets\movie_card.dart:START ---
 import 'package:flutter/material.dart';
 import 'package:movie_searcher/domain/models/movie.dart';
 
@@ -760,503 +1122,503 @@ class MovieCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Image.network(
-        movie.poster,
-        width: 50,
-        fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => const Icon(Icons.image_not_supported),
+    final cs = Theme.of(context).colorScheme;
+
+    return Card(
+      child: InkWell(
+        onTap: () => Navigator.pushNamed(context, '/detail', arguments: movie.id),
+        child: Row(
+          children: [
+            Hero(
+              tag: 'poster_${movie.id}',
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  bottomLeft: Radius.circular(16),
+                ),
+                child: Image.network(
+                  movie.poster,
+                  width: 96,
+                  height: 128,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(
+                    width: 96,
+                    height: 128,
+                    color: cs.surfaceContainer,
+                    child: const Icon(Icons.image_not_supported),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      movie.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 6),
+                    Text(movie.year, style: Theme.of(context).textTheme.bodyMedium),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+          ],
+        ),
       ),
-      title: Text(movie.title),
-      subtitle: Text(movie.year),
-      onTap: () => Navigator.pushNamed(context, '/detail', arguments: movie.id),
     );
   }
 }
 
---- lib\ui\movies\widgets\movie_card.dart:END ---
+--- ui\movies\widgets\movie_card.dart:END ---
 
---- test\unit\data\models\movie_dto_test.dart:START ---
-import 'package:flutter_test/flutter_test.dart';
-import 'package:movie_searcher/data/models/movie_dto.dart';
+--- ui\movies\widgets\movie_grid_title.dart:START ---
+import 'package:flutter/material.dart';
+import 'package:movie_searcher/domain/models/movie.dart';
 
-void main() {
-  test('fromJson: payload de busca (Search) mapeia campos básicos e deixa genre/plot vazios', () {
-    final json = {'Title': 'The Matrix', 'Year': '1999', 'imdbID': 'tt0133093', 'Poster': 'p'};
-    final dto = MovieDto.fromJson(json);
-    expect(dto.imdbId, 'tt0133093');
-    expect(dto.title, 'The Matrix');
-    expect(dto.genre, '');
-    expect(dto.plot, '');
-  });
+class MovieGridTile extends StatelessWidget {
+  final Movie movie;
+  const MovieGridTile({super.key, required this.movie});
 
-  test('fromJson: payload completo (por id) mapeia todos os campos', () {
-    final json = {
-      'Title': 'The Matrix',
-      'Year': '1999',
-      'imdbID': 'tt0133093',
-      'Poster': 'p',
-      'Genre': 'Action, Sci-Fi',
-      'Plot': 'Long plot...',
-    };
-    final dto = MovieDto.fromJson(json);
-    expect(dto.genre, contains('Action'));
-    expect(dto.plot, contains('Long'));
-  });
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
 
-  test('toJson: exporta com chaves minúsculas esperadas pelo projeto', () {
-    final dto = MovieDto(
-      imdbId: 'tt0133093',
-      title: 'The Matrix',
-      year: '1999',
-      poster: 'p',
-      genre: 'Action',
-      plot: 'Plot',
-    );
-    final j = dto.toJson();
-    expect(j['imdbId'], 'tt0133093');
-    expect(j['title'], 'The Matrix');
-    expect(j['genre'], 'Action');
-  });
-}
-
---- test\unit\data\models\movie_dto_test.dart:END ---
-
---- test\unit\data\repositories\movie_repository_test.dart:START ---
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:movie_searcher/data/models/movie_dto.dart';
-import 'package:movie_searcher/data/repositories/movies_repository.dart';
-import 'package:movie_searcher/data/services/movie_service.dart';
-
-class MockMovieService extends Mock implements MovieService {}
-
-void main() {
-  late MovieService svc;
-  late MoviesRepository repo;
-
-  setUp(() {
-    svc = MockMovieService();
-    repo = MoviesRepository(svc);
-  });
-
-  test('search mapeia DTO -> entidade com campos básicos', () async {
-    when(() => svc.fetchMovies('matrix')).thenAnswer(
-      (_) async => [
-        MovieDto(
-          imdbId: 'tt0133093',
-          title: 'The Matrix',
-          year: '1999',
-          poster: 'p',
-          genre: '',
-          plot: '',
+    return Card(
+      child: InkWell(
+        onTap: () => Navigator.pushNamed(context, '/detail', arguments: movie.id),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: Hero(
+                tag: 'poster_${movie.id}',
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
+                  child: AspectRatio(
+                    aspectRatio: 2 / 3,
+                    child: Image.network(
+                      movie.poster,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(
+                        color: cs.surfaceContainer,
+                        child: const Icon(Icons.image_not_supported, size: 48),
+                      ),
+                      loadingBuilder: (ctx, child, progress) {
+                        if (progress == null) return child;
+                        return Container(
+                          color: cs.surfaceContainer,
+                          alignment: Alignment.center,
+                          child: const CircularProgressIndicator(strokeWidth: 2),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    movie.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(movie.year, style: Theme.of(context).textTheme.bodySmall),
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
-    );
-
-    final list = await repo.search('matrix');
-    expect(list, hasLength(1));
-    expect(list.first.id, 'tt0133093');
-    expect(list.first.genre, '');
-  });
-
-  test('getById mapeia DTO completo -> entidade com genre/plot', () async {
-    when(() => svc.fetchMovieById('tt0133093')).thenAnswer(
-      (_) async => MovieDto(
-        imdbId: 'tt0133093',
-        title: 'The Matrix',
-        year: '1999',
-        poster: 'p',
-        genre: 'Action, Sci-Fi',
-        plot: 'Long plot...',
       ),
     );
-
-    final m = await repo.getById('tt0133093');
-    expect(m.genre, contains('Action'));
-    expect(m.plot, contains('Long'));
-  });
+  }
 }
 
---- test\unit\data\repositories\movie_repository_test.dart:END ---
+--- ui\movies\widgets\movie_grid_title.dart:END ---
 
---- test\unit\data\services\dio_service_test.dart:START ---
-import 'package:flutter_test/flutter_test.dart';
-import 'package:movie_searcher/data/services/dio_service.dart';
-
-void main() {
-  test('DioService: configura baseUrl e timeouts', () {
-    final s = DioService('https://api.example.com');
-    expect(s.dio.options.baseUrl, 'https://api.example.com');
-    expect(s.dio.options.connectTimeout, const Duration(seconds: 10));
-    expect(s.dio.options.receiveTimeout, const Duration(seconds: 15));
-  });
-}
-
---- test\unit\data\services\dio_service_test.dart:END ---
-
---- test\unit\data\services\local_store_service_test.dart:START ---
-import 'package:flutter_test/flutter_test.dart';
-import 'package:movie_searcher/data/services/local_store_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-void main() {
-  test('LocalStoreService: salva, deduplica por id e limita a 5 itens', () async {
-    SharedPreferences.setMockInitialValues({});
-    final store = LocalStoreService();
-
-    await store.saveRecent('tt1|A|2000|p');
-    await store.saveRecent('tt2|B|2001|p');
-    await store.saveRecent('tt1|A2|2000|p2');
-
-    var list = await store.getRecents();
-    expect(list.length, 2);
-    expect(list.first.startsWith('tt1|'), true);
-
-    await store.saveRecent('tt3|C|2002|p');
-    await store.saveRecent('tt4|D|2003|p');
-    await store.saveRecent('tt5|E|2004|p');
-    await store.saveRecent('tt6|F|2005|p');
-
-    list = await store.getRecents();
-    expect(list.length, 5);
-    expect(list.first.startsWith('tt6|'), true);
-  });
-}
-
---- test\unit\data\services\local_store_service_test.dart:END ---
-
---- test\unit\data\services\movie_service_test.dart:START ---
-import 'package:flutter_test/flutter_test.dart';
-import 'package:http_mock_adapter/http_mock_adapter.dart';
-import 'package:movie_searcher/data/services/dio_service.dart';
-import 'package:movie_searcher/data/services/movie_service.dart';
-
-void main() {
-  test('fetchMovies usa s= e parseia lista Search', () async {
-    final dioService = DioService('https://www.omdbapi.com/');
-    final adapter = DioAdapter(dio: dioService.dio);
-    dioService.dio.httpClientAdapter = adapter;
-
-    adapter.onGet(
-      '',
-      queryParameters: {'apikey': 'KEY', 's': 'matrix', 'type': 'movie'},
-      (server) => server.reply(200, {
-        'Search': [
-          {'Title': 'The Matrix', 'Year': '1999', 'imdbID': 'tt0133093', 'Poster': 'p'},
-        ],
-      }),
-    );
-
-    final svc = MovieService(dioService, apiKey: 'KEY');
-    final list = await svc.fetchMovies('matrix');
-    expect(list, hasLength(1));
-    expect(list.first.imdbId, 'tt0133093');
-  });
-
-  test('fetchMovies sem Search retorna lista vazia', () async {
-    final dioService = DioService('https://www.omdbapi.com/');
-    final adapter = DioAdapter(dio: dioService.dio);
-    dioService.dio.httpClientAdapter = adapter;
-
-    adapter.onGet(
-      '',
-      queryParameters: {'apikey': 'KEY', 's': 'nada', 'type': 'movie'},
-      (server) => server.reply(200, {'Response': 'False', 'Error': 'Movie not found!'}),
-    );
-
-    final svc = MovieService(dioService, apiKey: 'KEY');
-    final list = await svc.fetchMovies('nada');
-    expect(list, isEmpty);
-  });
-
-  test('fetchMovieById usa i= e plot=full', () async {
-    final dioService = DioService('https://www.omdbapi.com/');
-    final adapter = DioAdapter(dio: dioService.dio);
-    dioService.dio.httpClientAdapter = adapter;
-
-    adapter.onGet(
-      '',
-      queryParameters: {'apikey': 'KEY', 'i': 'tt0133093', 'plot': 'full'},
-      (server) => server.reply(200, {
-        'Title': 'The Matrix',
-        'Year': '1999',
-        'imdbID': 'tt0133093',
-        'Poster': 'p',
-        'Genre': 'Action, Sci-Fi',
-        'Plot': 'Long plot...',
-      }),
-    );
-
-    final svc = MovieService(dioService, apiKey: 'KEY');
-    final dto = await svc.fetchMovieById('tt0133093');
-    expect(dto.genre, contains('Action'));
-    expect(dto.plot, contains('Long'));
-  });
-}
-
---- test\unit\data\services\movie_service_test.dart:END ---
-
---- test\unit\domain\models\movie_test.dart:START ---
-import 'package:flutter_test/flutter_test.dart';
-import 'package:movie_searcher/domain/models/movie.dart';
-
-void main() {
-  test('Movie: defaults de genre/plot são strings vazias', () {
-    const m = Movie(id: 'id', title: 't', year: 'y', poster: 'p');
-    expect(m.genre, '');
-    expect(m.plot, '');
-  });
-
-  test('Movie: instancia com todos os campos', () {
-    const m = Movie(id: 'id', title: 't', year: 'y', poster: 'p', genre: 'g', plot: 'pl');
-    expect(m.genre, 'g');
-    expect(m.plot, 'pl');
-  });
-}
-
---- test\unit\domain\models\movie_test.dart:END ---
-
---- test\unit\ui\view_models\detail_cubit_test.dart:START ---
-import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:movie_searcher/ui/movies/view_models/recent/recent_cubit.dart';
-import 'package:movie_searcher/ui/movies/view_models/recent/recent_state.dart';
-import 'package:movie_searcher/data/services/local_store_service.dart';
-
-import '../../utils/mocks.dart';
-
-void main() {
-  late LocalStoreService local;
-
-  setUp(() {
-    local = MockLocalStoreService();
-  });
-
-  blocTest<RecentCubit, RecentState>(
-    'lista vazia -> RecentEmpty',
-    build: () {
-      when(() => local.getRecents()).thenAnswer((_) async => <String>[]);
-      return RecentCubit(local);
-    },
-    act: (cubit) => cubit.load(),
-    expect: () => [const RecentLoading(), const RecentEmpty()],
-  );
-
-  blocTest<RecentCubit, RecentState>(
-    'lista populada -> RecentLoaded com 2 itens',
-    build: () {
-      when(
-        () => local.getRecents(),
-      ).thenAnswer((_) async => ['tt1|A|2000|https://img/a.jpg', 'tt2|B|2001|https://img/b.jpg']);
-      return RecentCubit(local);
-    },
-    act: (cubit) => cubit.load(),
-    expect: () => [
-      const RecentLoading(),
-      isA<RecentLoaded>().having((s) => s.items.length, 'len', 2),
-    ],
-  );
-
-  blocTest<RecentCubit, RecentState>(
-    'erro ao ler -> RecentError',
-    build: () {
-      when(() => local.getRecents()).thenThrow(Exception('prefs'));
-      return RecentCubit(local);
-    },
-    act: (cubit) => cubit.load(),
-    expect: () => [
-      const RecentLoading(),
-      isA<RecentError>().having((e) => e.message, 'msg', contains('prefs')),
-    ],
-  );
-}
-
---- test\unit\ui\view_models\detail_cubit_test.dart:END ---
-
---- test\unit\ui\view_models\recent_cubit_test.dart:START ---
-import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:movie_searcher/ui/movies/view_models/recent/recent_cubit.dart';
-import 'package:movie_searcher/ui/movies/view_models/recent/recent_state.dart';
-import 'package:movie_searcher/data/services/local_store_service.dart';
-
-class MockLocalStoreService extends Mock implements LocalStoreService {}
-
-void main() {
-  late LocalStoreService local;
-
-  setUp(() {
-    local = MockLocalStoreService();
-  });
-
-  blocTest<RecentCubit, RecentState>(
-    'lista vazia -> RecentEmpty',
-    build: () {
-      when(() => local.getRecents()).thenAnswer((_) async => <String>[]);
-      return RecentCubit(local);
-    },
-    act: (cubit) => cubit.load(),
-    expect: () => [const RecentLoading(), const RecentEmpty()],
-  );
-
-  blocTest<RecentCubit, RecentState>(
-    'lista com linhas malformadas -> Empty (robusto)',
-    build: () {
-      when(() => local.getRecents()).thenAnswer((_) async => ['tt1|onlyTwoParts', '||', '']);
-      return RecentCubit(local);
-    },
-    act: (cubit) => cubit.load(),
-    expect: () => [const RecentLoading(), const RecentEmpty()],
-  );
-
-  blocTest<RecentCubit, RecentState>(
-    'lista populada válida -> RecentLoaded',
-    build: () {
-      when(
-        () => local.getRecents(),
-      ).thenAnswer((_) async => ['tt1|A|2000|https://img/a.jpg', 'tt2|B|2001|https://img/b.jpg']);
-      return RecentCubit(local);
-    },
-    act: (cubit) => cubit.load(),
-    expect: () => [
-      const RecentLoading(),
-      isA<RecentLoaded>().having((s) => s.items.length, 'len', 2),
-    ],
-  );
-
-  blocTest<RecentCubit, RecentState>(
-    'clear chama clearAll e emite RecentEmpty',
-    build: () {
-      when(() => local.clearAll()).thenAnswer((_) async {});
-      return RecentCubit(local);
-    },
-    act: (cubit) => cubit.clear(),
-    expect: () => [const RecentEmpty()],
-    verify: (_) => verify(() => local.clearAll()).called(1),
-  );
-}
-
---- test\unit\ui\view_models\recent_cubit_test.dart:END ---
-
---- test\unit\ui\view_models\search_bloc_test.dart:START ---
-import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:movie_searcher/ui/movies/view_models/search/search_bloc.dart';
-import 'package:movie_searcher/ui/movies/view_models/search/search_event.dart';
+--- ui\movies\widgets\search_page\result_sliver.dart:START ---
+// ui/movies/widgets/search/results_sliver.dart
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_searcher/ui/movies/view_models/search/search_bloc.dart'; // <— importe o bloc
 import 'package:movie_searcher/ui/movies/view_models/search/search_state.dart';
-import 'package:movie_searcher/data/repositories/movies_repository.dart';
-import 'package:movie_searcher/domain/models/movie.dart';
+import 'package:movie_searcher/ui/movies/widgets/movie_card.dart';
+import 'package:movie_searcher/ui/movies/widgets/movie_grid_title.dart';
+import 'package:movie_searcher/ui/movies/widgets/search_page/states_sliver.dart';
 
-class MockMoviesRepository extends Mock implements MoviesRepository {}
+class ResultsSliver extends StatelessWidget {
+  final int columns;
+  const ResultsSliver({super.key, required this.columns});
 
-void main() {
-  late MoviesRepository repo;
-
-  setUp(() => repo = MockMoviesRepository());
-
-  test('estado inicial é SearchIdle', () {
-    final bloc = SearchBloc(repo);
-    expect(bloc.state, const SearchIdle());
-    bloc.close();
-  });
-
-  blocTest<SearchBloc, SearchState>(
-    'SearchSubmitted vazio -> Idle',
-    build: () => SearchBloc(repo),
-    act: (bloc) => bloc.add(SearchSubmitted('   ')),
-    expect: () => [const SearchIdle()],
-  );
-
-  blocTest<SearchBloc, SearchState>(
-    'SearchSubmitted ok: Loading -> Success',
-    build: () {
-      when(() => repo.search('matrix')).thenAnswer(
-        (_) async => [const Movie(id: 'tt0133093', title: 'The Matrix', year: '1999', poster: 'p')],
-      );
-      return SearchBloc(repo);
-    },
-    act: (bloc) => bloc.add(SearchSubmitted('matrix')),
-    expect: () => [
-      const SearchLoading(),
-      isA<SearchSuccess>().having((s) => s.results.length, 'len', 1),
-    ],
-    verify: (_) => verify(() => repo.search('matrix')).called(1),
-  );
-
-  blocTest<SearchBloc, SearchState>(
-    'erro: Loading -> Error',
-    build: () {
-      when(() => repo.search('matrix')).thenThrow(Exception('boom'));
-      return SearchBloc(repo);
-    },
-    act: (bloc) => bloc.add(SearchSubmitted('matrix')),
-    expect: () => [const SearchLoading(), isA<SearchError>()],
-  );
-
-  blocTest<SearchBloc, SearchState>(
-    'múltiplos SearchTextChanged colapsam em 1 submit (debounce)',
-    build: () {
-      when(() => repo.search('matrix')).thenAnswer(
-        (_) async => [const Movie(id: 'tt0133093', title: 'The Matrix', year: '1999', poster: 'p')],
-      );
-      return SearchBloc(repo);
-    },
-    act: (bloc) async {
-      bloc.add(SearchTextChanged('m'));
-      await Future.delayed(const Duration(milliseconds: 100));
-      bloc.add(SearchTextChanged('ma'));
-      await Future.delayed(const Duration(milliseconds: 100));
-      bloc.add(SearchTextChanged('matrix'));
-    },
-    wait: const Duration(milliseconds: 450),
-    expect: () => [
-      const SearchLoading(),
-      isA<SearchSuccess>().having((s) => s.results.length, 'len', 1),
-    ],
-    verify: (_) => verify(() => repo.search('matrix')).called(1),
-  );
-
-  test('close cancela debounce pendente (não emite nada após fechar)', () async {
-    final bloc = SearchBloc(repo);
-    final emitted = <SearchState>[];
-    final sub = bloc.stream.listen(emitted.add);
-
-    bloc.add(SearchTextChanged('matrix'));
-    await bloc.close();
-
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    expect(emitted, isEmpty);
-    await sub.cancel();
-  });
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SearchBloc, SearchState>(
+      builder: (context, state) {
+        return switch (state) {
+          SearchLoading() => const SliverFillRemaining(
+            hasScrollBody: false,
+            child: Center(child: CircularProgressIndicator()),
+          ),
+          SearchEmpty() => const EmptyStateSliver(
+            icon: Icons.search_off,
+            message: 'Nenhum resultado.',
+          ),
+          SearchError(message: final m) => ErrorStateSliver(message: m),
+          SearchSuccess(results: final list) =>
+            columns == 1
+                ? SliverList.builder(
+                    itemCount: list.length,
+                    itemBuilder: (_, i) => MovieCard(movie: list[i]),
+                  )
+                : SliverGrid.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: columns,
+                      mainAxisSpacing: 12,
+                      crossAxisSpacing: 12,
+                      childAspectRatio: 2 / 3 + 0.15,
+                    ),
+                    itemCount: list.length,
+                    itemBuilder: (_, i) => MovieGridTile(movie: list[i]),
+                  ),
+          SearchIdle() => const EmptyStateSliver(
+            icon: Icons.local_movies_outlined,
+            message: 'Busque um filme pelo título.',
+          ),
+        };
+      },
+    );
+  }
 }
 
---- test\unit\ui\view_models\search_bloc_test.dart:END ---
+--- ui\movies\widgets\search_page\result_sliver.dart:END ---
 
---- test\unit\utils\mocks.dart:START ---
-import 'package:mocktail/mocktail.dart';
-import 'package:movie_searcher/data/repositories/movies_repository.dart';
-import 'package:movie_searcher/data/services/local_store_service.dart';
-import 'package:movie_searcher/data/services/movie_service.dart';
-import 'package:movie_searcher/domain/models/movie.dart';
+--- ui\movies\widgets\search_page\states_sliver.dart:START ---
+// ui/movies/widgets/search/states_slivers.dart
+import 'package:flutter/material.dart';
 
-class MockMoviesRepository extends Mock implements MoviesRepository {}
+class EmptyStateSliver extends StatelessWidget {
+  final IconData icon;
+  final String message;
+  const EmptyStateSliver({super.key, required this.icon, required this.message});
 
-class MockMovieService extends Mock implements MovieService {}
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return SliverFillRemaining(
+      hasScrollBody: false,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 56, color: cs.outline),
+            const SizedBox(height: 12),
+            Text(message, textAlign: TextAlign.center),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
-class MockLocalStoreService extends Mock implements LocalStoreService {}
+class ErrorStateSliver extends StatelessWidget {
+  final String message;
+  const ErrorStateSliver({super.key, required this.message});
 
-Movie makeMovie({
-  String id = 'tt0133093',
-  String title = 'The Matrix',
-  String year = '1999',
-  String poster = 'https://img/p.jpg',
-  String genre = 'Action, Sci-Fi',
-  String plot = 'Long plot...',
-}) => Movie(id: id, title: title, year: year, poster: poster, genre: genre, plot: plot);
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return SliverFillRemaining(
+      hasScrollBody: false,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.error_outline, size: 56, color: cs.error),
+            const SizedBox(height: 12),
+            Text('Erro: $message', textAlign: TextAlign.center),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
---- test\unit\utils\mocks.dart:END ---
+--- ui\movies\widgets\search_page\states_sliver.dart:END ---
+
+--- ui\movies\widgets\search_page\search_bar\search_bar_area.dart:START ---
+// ui/movies/widgets/search/search_bar_area.dart
+import 'package:flutter/material.dart';
+import 'package:movie_searcher/ui/core/layout/breakpoints_rules.dart';
+
+enum SearchBarLayout { compact, tightRow, comfortableRow }
+
+class SearchBarArea extends StatelessWidget {
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onSubmit;
+  final VoidCallback onRecentTap;
+
+  const SearchBarArea({
+    super.key,
+    required this.controller,
+    required this.onChanged,
+    required this.onSubmit,
+    required this.onRecentTap,
+  });
+
+  searchBarLayoutForWidth(Breakpoint bp) {
+    if (bp == Breakpoint.xs) {
+      return SearchBarLayout.compact;
+    } else if (bp == Breakpoint.sm || bp == Breakpoint.md) {
+      return SearchBarLayout.tightRow;
+    } else {
+      return SearchBarLayout.comfortableRow;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, c) {
+        final layout = searchBarLayoutForWidth(context.layoutBreakPoint);
+        return switch (layout) {
+          SearchBarLayout.compact => _CompactLayout(
+            controller: controller,
+            onChanged: onChanged,
+            onSubmit: onSubmit,
+            onRecentTap: onRecentTap,
+          ),
+          SearchBarLayout.tightRow => _TightRowLayout(
+            controller: controller,
+            onChanged: onChanged,
+            onSubmit: onSubmit,
+            onRecentTap: onRecentTap,
+          ),
+          SearchBarLayout.comfortableRow => _ComfortableRowLayout(
+            controller: controller,
+            onChanged: onChanged,
+            onSubmit: onSubmit,
+            onRecentTap: onRecentTap,
+          ),
+        };
+      },
+    );
+  }
+}
+
+/// ---------- peças reutilizáveis ----------
+class _SearchField extends StatelessWidget {
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onSubmit;
+  const _SearchField({required this.controller, required this.onChanged, required this.onSubmit});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return ValueListenableBuilder<TextEditingValue>(
+      valueListenable: controller,
+      builder: (_, v, __) {
+        final hasText = v.text.isNotEmpty;
+        return TextField(
+          controller: controller,
+          textInputAction: TextInputAction.search,
+          decoration: InputDecoration(
+            hintText: 'Buscar por título',
+            prefixIcon: Icon(Icons.search, color: cs.onSurfaceVariant),
+            suffixIcon: hasText
+                ? IconButton(
+                    tooltip: 'Limpar',
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      controller.clear();
+                      onChanged('');
+                    },
+                  )
+                : null,
+          ),
+          onChanged: onChanged,
+          onSubmitted: (_) {
+            FocusScope.of(context).unfocus();
+            onSubmit();
+          },
+          maxLines: 1,
+        );
+      },
+    );
+  }
+}
+
+/// ---------- layouts ----------
+class _CompactLayout extends StatelessWidget {
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onSubmit;
+  final VoidCallback onRecentTap;
+  const _CompactLayout({
+    required this.controller,
+    required this.onChanged,
+    required this.onSubmit,
+    required this.onRecentTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          children: [
+            _SearchField(controller: controller, onChanged: onChanged, onSubmit: onSubmit),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 48,
+                    child: FilledButton.icon(
+                      onPressed: () {
+                        FocusScope.of(context).unfocus();
+                        onSubmit();
+                      },
+                      icon: const Icon(Icons.search),
+                      label: const Text('Buscar'),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: SizedBox(
+                    height: 48,
+                    child: OutlinedButton.icon(
+                      onPressed: onRecentTap,
+                      icon: const Icon(Icons.history),
+                      label: const Text('Recentes'),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TightRowLayout extends StatelessWidget {
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onSubmit;
+  final VoidCallback onRecentTap;
+  const _TightRowLayout({
+    required this.controller,
+    required this.onChanged,
+    required this.onSubmit,
+    required this.onRecentTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            Expanded(
+              child: _SearchField(controller: controller, onChanged: onChanged, onSubmit: onSubmit),
+            ),
+            const SizedBox(width: 8),
+            SizedBox(
+              height: 48,
+              width: 48,
+              child: IconButton.filled(
+                tooltip: 'Buscar',
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  onSubmit();
+                },
+                icon: const Icon(Icons.search),
+              ),
+            ),
+            const SizedBox(width: 4),
+            SizedBox(
+              height: 48,
+              width: 48,
+              child: IconButton(
+                tooltip: 'Recentes',
+                onPressed: onRecentTap,
+                icon: const Icon(Icons.history),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ComfortableRowLayout extends StatelessWidget {
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onSubmit;
+  final VoidCallback onRecentTap;
+  const _ComfortableRowLayout({
+    required this.controller,
+    required this.onChanged,
+    required this.onSubmit,
+    required this.onRecentTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            Expanded(
+              child: _SearchField(controller: controller, onChanged: onChanged, onSubmit: onSubmit),
+            ),
+            const SizedBox(width: 12),
+            SizedBox(
+              height: 48,
+              child: FilledButton.icon(
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  onSubmit();
+                },
+                icon: const Icon(Icons.search),
+                label: const Text('Buscar'),
+              ),
+            ),
+            const SizedBox(width: 8),
+            IconButton(
+              tooltip: 'Recentes',
+              onPressed: onRecentTap,
+              icon: const Icon(Icons.history),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+--- ui\movies\widgets\search_page\search_bar\search_bar_area.dart:END ---
