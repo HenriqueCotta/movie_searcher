@@ -1,4 +1,3 @@
-// ui/movies/widgets/search_page/search_bar/search_bar_area.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/ui/movies/view_models/search_adaptability/search_adaptability_state.dart';
@@ -47,7 +46,6 @@ class SearchBarArea extends StatelessWidget {
   }
 }
 
-/// ---------- peças reutilizáveis ----------
 class _SearchField extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
@@ -90,7 +88,6 @@ class _SearchField extends StatelessWidget {
   }
 }
 
-/// ---------- layouts (iguais aos que você já tinha) ----------
 class _CompactLayout extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String> onChanged;

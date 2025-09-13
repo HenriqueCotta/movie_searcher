@@ -1,4 +1,3 @@
-// ui/movies/widgets/search_page/result_sliver.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/ui/movies/view_models/search/search_bloc.dart';

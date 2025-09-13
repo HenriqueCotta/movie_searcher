@@ -8,9 +8,7 @@ class SearchAdaptabilityBloc extends Bloc<SearchAdaptabilityEvent, SearchAdaptab
     on<WidthChanged>(_onWidthChanged);
   }
 
-  // Regras de responsividade centralizadas aqui (UI-only!)
   SearchAdaptabilityState _stateForWidth(double w) {
-    // você pode ajustar estes breakpoints sem tocar em widgets
     if (w < 450) {
       return const SearchAdaptabilityState(barLayout: SearchBarLayout.compact, columns: 1);
     } else if (w < 740) {

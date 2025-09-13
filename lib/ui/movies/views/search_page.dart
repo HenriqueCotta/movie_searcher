@@ -1,4 +1,3 @@
-// ui/movies/views/search_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/ui/core/widgets/theme_toggle_action.dart';
@@ -25,7 +24,6 @@ class _SearchPageState extends State<SearchPage> {
 
     return LayoutBuilder(
       builder: (ctx, c) {
-        // informa largura atual ao BLoC de adaptabilidade (UI-only)
         ctx.read<SearchAdaptabilityBloc>().add(WidthChanged(c.maxWidth));
 
         return Scaffold(

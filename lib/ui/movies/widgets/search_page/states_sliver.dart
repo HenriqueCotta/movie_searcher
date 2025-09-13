@@ -1,4 +1,3 @@
-// ui/movies/widgets/search/states_slivers.dart
 import 'package:flutter/material.dart';
 
 class EmptyStateSliver extends StatelessWidget {
