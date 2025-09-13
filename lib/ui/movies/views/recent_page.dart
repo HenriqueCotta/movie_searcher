@@ -23,7 +23,7 @@ class _RecentPageState extends State<RecentPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => context.read<RecentCubit>().load());
+    context.read<RecentCubit>().load();
   }
 
   @override
