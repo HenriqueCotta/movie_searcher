@@ -24,7 +24,7 @@ ThemeData _buildTheme(Brightness brightness) {
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: base.colorScheme.surfaceContainerHighest, // ok no light/dark
+      fillColor: base.colorScheme.surfaceContainerHighest,
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       enabledBorder: OutlineInputBorder(
         borderSide: BorderSide(color: base.colorScheme.outlineVariant),

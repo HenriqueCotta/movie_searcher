@@ -1,4 +1,3 @@
-// ui/movies/view_models/search/search_bloc.dart
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_searcher/data/repositories/movies_repository.dart';
@@ -36,12 +35,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     if (_closing) return;
     final q = event.query;
 
-    // atualiza o query no estado mantendo o tipo atual (UX: mantém resultados na tela)
     _emitWithQuery(emit, q);
 
     _debounce?.cancel();
-    if (q.trim().isEmpty) return; // não dispara busca vazia
-
+    if (q.trim().isEmpty) return;
     _debounce = Timer(const Duration(milliseconds: 400), () {
       if (_closing || isClosed) return;
       add(SearchSubmitted(q));

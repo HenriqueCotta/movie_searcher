@@ -1,3 +1,3 @@
 import 'package:flutter/material.dart';
 
-const seedColor = Colors.teal; // cor base (M3)
+const seedColor = Colors.teal;

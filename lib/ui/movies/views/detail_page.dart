@@ -1,4 +1,3 @@
-// ui/movies/views/detail_page.dart
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,17 +36,13 @@ class _DetailPageState extends State<DetailPage> {
           return LayoutBuilder(
             builder: (context, constraints) {
               final isCompact = constraints.maxWidth < 720;
-              // Mantém o poster pequeno para não evidenciar pixelização
-              final posterWidth = isCompact
-                  ? math.min(constraints.maxWidth * 0.30, 120.0)
-                  : 180.0; // no máx 180 em telas maiores
+              final posterWidth = isCompact ? math.min(constraints.maxWidth * 0.30, 120.0) : 180.0;
 
               final info = _MovieInfo(title: m.title, year: m.year, genre: m.genre, plot: m.plot);
 
               return SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: isCompact
-                    // Mobile: poster pequeno à esquerda, infos à direita; plot abaixo
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -63,7 +58,6 @@ class _DetailPageState extends State<DetailPage> {
                           info.plotOnly(),
                         ],
                       )
-                    // Wide: duas colunas, poster fixo à esquerda e tudo à direita
                     : Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -81,8 +75,6 @@ class _DetailPageState extends State<DetailPage> {
   }
 }
 
-/// Pôster pequeno, 2:3, com bordas e `cacheWidth` para evitar upscale
-/// Pôster pequeno, tamanho fixo (2:3), bordas e cacheWidth
 class _Poster extends StatelessWidget {
   final String url;
   final double width;
@@ -92,7 +84,7 @@ class _Poster extends StatelessWidget {
   Widget build(BuildContext context) {
     final dpr = MediaQuery.of(context).devicePixelRatio;
     final cacheWidth = (width * dpr).round();
-    final height = width * 1.5; // 2:3 -> altura = largura * 1.5
+    final height = width * 1.5;
 
     return SizedBox(
       width: width,
@@ -125,7 +117,6 @@ class _Poster extends StatelessWidget {
   }
 }
 
-/// Bloco com título/ano/gênero/plot em pedaços reutilizáveis (mobile e wide)
 class _MovieInfo {
   final String title;
   final String year;
@@ -174,7 +165,6 @@ class _MovieInfo {
   );
 }
 
-/// Converte "Action, Sci-Fi" em chips
 class _GenreChips extends StatelessWidget {
   final String genre;
   const _GenreChips({required this.genre});
